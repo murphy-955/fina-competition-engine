@@ -1,3 +1,3 @@
-- [首页](/)
+- [首页]()
 - [需求规格](requirements.md)
 - [架构设计](architecture.md)
