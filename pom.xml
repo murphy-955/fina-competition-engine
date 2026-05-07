@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.murphy955</groupId>
+    <groupId>io.github.murphy955.fina</groupId>
     <artifactId>fina-competition-engine</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -29,54 +29,61 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.10.0</junit.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-rules-engine</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-competition</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-timing</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-scoring</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-data-exchange</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-records</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.murphy955</groupId>
+                <groupId>io.github.murphy955.fina</groupId>
                 <artifactId>world-aquatics-officials</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
