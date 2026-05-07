@@ -126,7 +126,6 @@ cmake-build-*/
 .idea/**/mongoSettings.xml
 
 # File-based project format
-*.iws
 
 # IntelliJ
 out/
@@ -158,7 +157,6 @@ fabric.properties
 ### Node template
 # Logs
 logs
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -260,7 +258,6 @@ dist
 
 # vuepress v2.x temp and cache directory
 .temp
-.cache
 
 # Docusaurus cache and generated files
 .docusaurus
@@ -287,3 +284,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+/.idea/
