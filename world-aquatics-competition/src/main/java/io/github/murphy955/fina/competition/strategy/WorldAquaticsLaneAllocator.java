@@ -1,5 +1,6 @@
 package io.github.murphy955.fina.competition.strategy;
 
+import io.github.murphy955.fina.common.exception.ValidationException;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 
 import java.util.List;
@@ -22,6 +23,12 @@ public class WorldAquaticsLaneAllocator implements LaneAllocator {
 
     @Override
     public void apply(List<Athlete> sortedAthletes, int laneCount) {
+        if (sortedAthletes.size() > laneCount) {
+            throw new ValidationException(
+                    "the number of athlete (" + sortedAthletes.size() + ") is exceeds the number of (" + laneCount + "). " +
+                    "The number of athletes in each group must not exceed the number of lanes available.");
+        }
+
         int center = computeCenter(laneCount);
 
         for (int i = 0; i < sortedAthletes.size(); i++) {

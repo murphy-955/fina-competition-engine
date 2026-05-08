@@ -37,7 +37,7 @@ public class RaceKeyRegister<G extends Enum<G> & BaseGroup> {
      */
     public String buildKey(GenderEnum gender, G group, String distance, EventTypeEnum event, StrokeEnum stroke) {
         if (gender == null || group == null || distance == null || event == null || stroke == null) {
-            throw new ValidationException("所有传入的参数不能为空");
+            throw new ValidationException("all passed in parameters cannot be empty");
         }
         return String.join("-", gender.name(), group.getName(), distance, event.name(), stroke.name());
     }
