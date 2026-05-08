@@ -62,3 +62,5 @@ world-aquatics-parent
 
 - [需求规格](requirements.md) — 完整的功能需求与设计约束
 - [架构设计](architecture.md) — 多模块架构、模块职责与依赖关系
+- **功能说明**
+  - [比赛编排](functionality/seeding.md) — 预赛/半决赛/决赛编排策略与道次分配

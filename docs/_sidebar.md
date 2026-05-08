@@ -1,3 +1,5 @@
 - [首页]()
 - [需求规格](requirements.md)
 - [架构设计](architecture.md)
+- **功能说明**
+  - [比赛编排](functionality/seeding.md)
