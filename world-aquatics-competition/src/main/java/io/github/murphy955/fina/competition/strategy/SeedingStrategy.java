@@ -14,6 +14,9 @@ import java.util.Map;
  */
 public interface SeedingStrategy {
     /**
+     * 注意{@code Map<String, List<Athlete>>}中的{@code List<Athlete>}会被<strong>原地排序</strong><br>
+     * 如果业务需要保留分组，请提前拷贝一份。
+     *
      * @param athletes  运动员列表
      * @param laneCount 泳道数量
      * @author 李泽聿
@@ -22,7 +25,8 @@ public interface SeedingStrategy {
     void generateSeeding(Map<String, List<Athlete>> athletes, int laneCount);
 
     /**
-     * 排好序的运动员列表
+     * 注意{@code Map<String, List<Athlete>>}中的{@code List<Athlete>}会被<strong>原地排序</strong><br>
+     * 如果业务需要保留分组，请提前拷贝一份。
      *
      * @param athletes  运动员列表
      * @param laneCount 泳道数量
