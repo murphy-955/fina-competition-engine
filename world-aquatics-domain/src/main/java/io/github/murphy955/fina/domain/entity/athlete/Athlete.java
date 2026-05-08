@@ -76,15 +76,13 @@ public class Athlete {
             return false;
         }
         Athlete athlete = (Athlete) obj;
-        return swimLane == athlete.swimLane &&
-                group == athlete.group &&
-                java.util.Objects.equals(name, athlete.name) &&
+        return java.util.Objects.equals(name, athlete.name) &&
                 java.util.Objects.equals(raceTime, athlete.raceTime);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(name, raceTime, swimLane, group);
+        return java.util.Objects.hash(name, raceTime);
     }
 
     @Override
