@@ -1,6 +1,8 @@
 package io.github.murphy955.fina.competition.strategy.impl;
 
+import io.github.murphy955.fina.common.exception.ValidationException;
 import io.github.murphy955.fina.competition.strategy.LaneAllocator;
+import io.github.murphy955.fina.competition.strategy.WorldAquaticsLaneAllocator;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -226,6 +228,19 @@ class StandardSeedingStrategyImplTest {
 			assertEquals(99, a.getSwimLane());
 			// LaneAllocator 只负责泳道分配，组号由策略决定
 		}
+	}
+
+	@Test
+	@DisplayName("WorldAquaticsLaneAllocator: 运动员人数超过泳道数应抛异常")
+	void athleteCountExceedsLaneCountThrowsException() {
+		WorldAquaticsLaneAllocator allocator = new WorldAquaticsLaneAllocator();
+		List<Athlete> athletes = createAthletes(9);
+
+		ValidationException exception = assertThrows(ValidationException.class, () -> {
+			allocator.apply(athletes, 8);
+		});
+
+		assertTrue(exception.getMessageKey().contains("exceeds the number of"));
 	}
 
 	@Test
