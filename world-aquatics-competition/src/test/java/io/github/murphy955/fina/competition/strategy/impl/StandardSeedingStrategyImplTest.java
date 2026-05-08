@@ -9,23 +9,25 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * StandardSeedingStrategyImpl 单元测试
+ * StandardSeedingStrategyImpl 单元测试（已委托给 HeatsSeedingStrategy）。
  *
  * @author 李泽聿
  * @since 2026/05/07
  */
 class StandardSeedingStrategyImplTest {
 
-	private StandardSeedingStrategyImpl strategy;
+	private HeatsSeedingStrategy strategy;
 
 	@BeforeEach
 	void setUp() {
-		strategy = new StandardSeedingStrategyImpl();
+		strategy = new HeatsSeedingStrategy();
 	}
 
 	// ==================== 排序测试 ====================
@@ -38,10 +40,9 @@ class StandardSeedingStrategyImplTest {
 				new Athlete("Fast", RaceTime.parse("1:00.00")),
 				new Athlete("Mid", RaceTime.parse("1:30.00"))
 		);
-		// List.of 返回不可变列表，需要转为可变列表
 		List<Athlete> mutable = new ArrayList<>(athletes);
 
-		strategy.generateSeeding(mutable, 8);
+		strategy.generateSeeding(wrap(mutable), 8);
 
 		assertEquals("Fast", mutable.get(0).getName());
 		assertEquals("Mid", mutable.get(1).getName());
@@ -58,7 +59,7 @@ class StandardSeedingStrategyImplTest {
 		);
 		List<Athlete> mutable = new ArrayList<>(athletes);
 
-		strategy.generateSeeding(mutable, 8, Comparator.comparing(Athlete::getName), null);
+		strategy.generateSeeding(wrap(mutable), 8, Comparator.comparing(Athlete::getName), null);
 
 		assertEquals("Alice", mutable.get(0).getName());
 		assertEquals("Bob", mutable.get(1).getName());
@@ -74,7 +75,7 @@ class StandardSeedingStrategyImplTest {
 		);
 		List<Athlete> mutable = new ArrayList<>(athletes);
 
-		strategy.generateSeeding(mutable, 8, null, null);
+		strategy.generateSeeding(wrap(mutable), 8, null, null);
 
 		assertEquals("Fast", mutable.get(0).getName());
 		assertEquals("Slow", mutable.get(1).getName());
@@ -83,90 +84,112 @@ class StandardSeedingStrategyImplTest {
 	// ==================== 8 泳道道次分配 ====================
 
 	@Test
-	@DisplayName("DefaultLaneAllocator: 8 泳道应按 SW 3.1.2 分配道次")
+	@DisplayName("WorldAquaticsLaneAllocator: 8 泳道应按 SW 3.2.5.1 分配道次")
 	void eightLaneAllocation() {
 		List<Athlete> athletes = createAthletes(8);
-		strategy.generateSeeding(athletes, 8);
+		strategy.generateSeeding(wrap(athletes), 8);
 
 		// 排名1→第4道, 2→5, 3→3, 4→6, 5→2, 6→7, 7→1, 8→8
-		assertLaneAndGroup(athletes.get(0), 4, 1); // 第1名
-		assertLaneAndGroup(athletes.get(1), 5, 1); // 第2名
-		assertLaneAndGroup(athletes.get(2), 3, 1); // 第3名
-		assertLaneAndGroup(athletes.get(3), 6, 1); // 第4名
-		assertLaneAndGroup(athletes.get(4), 2, 1); // 第5名
-		assertLaneAndGroup(athletes.get(5), 7, 1); // 第6名
-		assertLaneAndGroup(athletes.get(6), 1, 1); // 第7名
-		assertLaneAndGroup(athletes.get(7), 8, 1); // 第8名
+		assertLane(athletes.get(0), 4); // 第1名
+		assertLane(athletes.get(1), 5); // 第2名
+		assertLane(athletes.get(2), 3); // 第3名
+		assertLane(athletes.get(3), 6); // 第4名
+		assertLane(athletes.get(4), 2); // 第5名
+		assertLane(athletes.get(5), 7); // 第6名
+		assertLane(athletes.get(6), 1); // 第7名
+		assertLane(athletes.get(7), 8); // 第8名
 	}
 
 	// ==================== 6 泳道道次分配 ====================
 
 	@Test
-	@DisplayName("DefaultLaneAllocator: 6 泳道应按 SW 3.1.2 分配道次")
+	@DisplayName("WorldAquaticsLaneAllocator: 6 泳道应按 SW 3.2.5.1 分配道次")
 	void sixLaneAllocation() {
 		List<Athlete> athletes = createAthletes(6);
-		strategy.generateSeeding(athletes, 6);
+		strategy.generateSeeding(wrap(athletes), 6);
 
 		// 排名1→第3道, 2→4, 3→2, 4→5, 5→1, 6→6
-		assertLaneAndGroup(athletes.get(0), 3, 1);
-		assertLaneAndGroup(athletes.get(1), 4, 1);
-		assertLaneAndGroup(athletes.get(2), 2, 1);
-		assertLaneAndGroup(athletes.get(3), 5, 1);
-		assertLaneAndGroup(athletes.get(4), 1, 1);
-		assertLaneAndGroup(athletes.get(5), 6, 1);
+		assertLane(athletes.get(0), 3);
+		assertLane(athletes.get(1), 4);
+		assertLane(athletes.get(2), 2);
+		assertLane(athletes.get(3), 5);
+		assertLane(athletes.get(4), 1);
+		assertLane(athletes.get(5), 6);
 	}
 
 	// ==================== 10 泳道道次分配 ====================
 
 	@Test
-	@DisplayName("DefaultLaneAllocator: 10 泳道应按 SW 3.1.2 分配道次")
+	@DisplayName("WorldAquaticsLaneAllocator: 10 泳道应按 SW 3.2.5.1 分配道次")
 	void tenLaneAllocation() {
 		List<Athlete> athletes = createAthletes(10);
-		strategy.generateSeeding(athletes, 10);
+		strategy.generateSeeding(wrap(athletes), 10);
 
-		// 10 道池特殊处理：center = 4（泳道编号 0~9）
-		// 排名1→第4道, 2→5, 3→3, 4→6, 5→2, 6→7, 7→1, 8→8, 9→0, 10→9
-		assertLaneAndGroup(athletes.get(0), 4, 1);
-		assertLaneAndGroup(athletes.get(1), 5, 1);
-		assertLaneAndGroup(athletes.get(2), 3, 1);
-		assertLaneAndGroup(athletes.get(3), 6, 1);
-		assertLaneAndGroup(athletes.get(4), 2, 1);
-		assertLaneAndGroup(athletes.get(5), 7, 1);
-		assertLaneAndGroup(athletes.get(6), 1, 1);
-		assertLaneAndGroup(athletes.get(7), 8, 1);
-		assertLaneAndGroup(athletes.get(8), 0, 1);
-		assertLaneAndGroup(athletes.get(9), 9, 1);
+		// 10道池：排名1→第4道, 2→5, 3→3, 4→6, 5→2, 6→7, 7→1, 8→8, 9→0, 10→9
+		assertLane(athletes.get(0), 4);
+		assertLane(athletes.get(1), 5);
+		assertLane(athletes.get(2), 3);
+		assertLane(athletes.get(3), 6);
+		assertLane(athletes.get(4), 2);
+		assertLane(athletes.get(5), 7);
+		assertLane(athletes.get(6), 1);
+		assertLane(athletes.get(7), 8);
+		assertLane(athletes.get(8), 0);
+		assertLane(athletes.get(9), 9);
 	}
 
-	// ==================== 多组分配 ====================
+	// ==================== 多组分配（2组快慢交替）====================
 
 	@Test
-	@DisplayName("DefaultLaneAllocator: 16 人 8 泳道应分为 2 组")
-	void multiGroupAllocation() {
+	@DisplayName("Heats: 16 人 8 泳道 2 组应按快慢交替分配")
+	void multiGroupAllocationTwoHeats() {
 		List<Athlete> athletes = createAthletes(16);
-		strategy.generateSeeding(athletes, 8);
+		strategy.generateSeeding(wrap(athletes), 8);
 
-		// 第1组：运动员 0-7
-		for (int i = 0; i < 8; i++) {
-			assertEquals(1, athletes.get(i).getGroup(), "Athlete " + i + " should be in group 1");
-		}
-		// 第2组：运动员 8-15
-		for (int i = 8; i < 16; i++) {
-			assertEquals(2, athletes.get(i).getGroup(), "Athlete " + i + " should be in group 2");
+		// 世界泳联 2 组规则：最快→第2组，次快→第1组，交替
+		// Athlete0(最快)→group2, Athlete1→group1, Athlete2→group2, Athlete3→group1...
+		for (int i = 0; i < 16; i++) {
+			Athlete athlete = findAthleteByName(athletes, "Athlete" + i);
+			int expectedGroup = (i % 2 == 0) ? 2 : 1;
+			assertEquals(expectedGroup, athlete.getGroup(),
+					"Athlete" + i + " should be in group " + expectedGroup);
 		}
 
-		// 第2组的道次分配应与第1组相同
-		assertEquals(4, athletes.get(8).getSwimLane());
-		assertEquals(5, athletes.get(9).getSwimLane());
+		// 验证泳道：group 2 的最快者(Athlete0)应得第4道
+		Athlete fastestInGroup2 = findAthleteByName(athletes, "Athlete0");
+		assertEquals(4, fastestInGroup2.getSwimLane());
+
+		// group 1 的最快者(Athlete1)应得第4道
+		Athlete fastestInGroup1 = findAthleteByName(athletes, "Athlete1");
+		assertEquals(4, fastestInGroup1.getSwimLane());
+	}
+
+	// ==================== 多组分配（3组循环）====================
+
+	@Test
+	@DisplayName("Heats: 24 人 8 泳道 3 组应按循环规则分配")
+	void multiGroupAllocationThreeHeats() {
+		HeatsSeedingStrategy heatsStrategy = new HeatsSeedingStrategy();
+		List<Athlete> athletes = createAthletes(24);
+		heatsStrategy.generateSeeding(wrap(athletes), 8);
+
+		// 3组规则：最快→第3组，次快→第2组，第三快→第1组，循环
+		// i=0→group3, i=1→group2, i=2→group1, i=3→group3, i=4→group2, i=5→group1...
+		for (int i = 0; i < 24; i++) {
+			Athlete athlete = findAthleteByName(athletes, "Athlete" + i);
+			int expectedGroup = 3 - (i % 3);
+			assertEquals(expectedGroup, athlete.getGroup(),
+					"Athlete" + i + " should be in group " + expectedGroup);
+		}
 	}
 
 	// ==================== 运动员不足一组 ====================
 
 	@Test
-	@DisplayName("DefaultLaneAllocator: 5 人 8 泳道应只分 1 组，不越界")
+	@DisplayName("Heats: 5 人 8 泳道应只分 1 组，不越界")
 	void lessThanOneGroup() {
 		List<Athlete> athletes = createAthletes(5);
-		strategy.generateSeeding(athletes, 8);
+		strategy.generateSeeding(wrap(athletes), 8);
 
 		// 5 人都应在第1组
 		for (int i = 0; i < 5; i++) {
@@ -196,12 +219,12 @@ class StandardSeedingStrategyImplTest {
 			}
 		};
 
-		strategy.generateSeeding(athletes, 8, null, customAllocator);
+		strategy.generateSeeding(wrap(athletes), 8, null, customAllocator);
 
 		assertTrue(called[0]);
 		for (Athlete a : athletes) {
 			assertEquals(99, a.getSwimLane());
-			assertEquals(99, a.getGroup());
+			// LaneAllocator 只负责泳道分配，组号由策略决定
 		}
 	}
 
@@ -209,7 +232,7 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("generateSeeding: null LaneAllocator 应使用默认分配器")
 	void nullLaneRuleUsesDefault() {
 		List<Athlete> athletes = createAthletes(8);
-		strategy.generateSeeding(athletes, 8, null, null);
+		strategy.generateSeeding(wrap(athletes), 8, null, null);
 
 		assertEquals(4, athletes.get(0).getSwimLane());
 		assertEquals(1, athletes.get(0).getGroup());
@@ -237,17 +260,27 @@ class StandardSeedingStrategyImplTest {
 	private List<Athlete> createAthletes(int count) {
 		List<Athlete> list = new ArrayList<>();
 		for (int i = 0; i < count; i++) {
-			// 成绩从 50.00 开始，每人慢 1 秒
 			String timeStr = String.format("%d.00", 50 + i);
 			list.add(new Athlete("Athlete" + i, RaceTime.parse(timeStr)));
 		}
 		return list;
 	}
 
-	private void assertLaneAndGroup(Athlete athlete, int expectedLane, int expectedGroup) {
+	private void assertLane(Athlete athlete, int expectedLane) {
 		assertEquals(expectedLane, athlete.getSwimLane(),
 				"Athlete " + athlete.getName() + " swim lane mismatch");
-		assertEquals(expectedGroup, athlete.getGroup(),
-				"Athlete " + athlete.getName() + " group mismatch");
+	}
+
+	private Map<String, List<Athlete>> wrap(List<Athlete> athletes) {
+		Map<String, List<Athlete>> map = new HashMap<>();
+		map.put("test", athletes);
+		return map;
+	}
+
+	private Athlete findAthleteByName(List<Athlete> athletes, String name) {
+		return athletes.stream()
+				.filter(a -> a.getName().equals(name))
+				.findFirst()
+				.orElseThrow(() -> new AssertionError("Athlete not found: " + name));
 	}
 }
