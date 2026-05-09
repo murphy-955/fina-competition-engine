@@ -54,11 +54,28 @@ public abstract class AbstractSeedingStrategy implements SeedingStrategy {
     protected abstract List<List<Athlete>> distributeIntoGroups(List<Athlete> sorted, int laneCount);
 
     /**
-     * 默认排序规则：按成绩从小到大排序（成绩越小越快）。
+     * 默认排序规则：
+     * <ul>
+     *     <li>优先安排 {@code raceTime} 不为空的运动员（成绩越小越快）</li>
+     *     <li>{@code raceTime} 为空的运动员排在后面，按 {@link Athlete#hashCode()} 排序</li>
+     * </ul>
      *
      * @return java.util.Comparator<? super io.github.murphy955.fina.domain.entity.athlete.Athlete>
      */
     public Comparator<? super Athlete> getDefaultComparator() {
-        return Comparator.comparing(Athlete::getRaceTime);
+        return (a1, a2) -> {
+            boolean a1HasTime = a1.getRaceTime() != null;
+            boolean a2HasTime = a2.getRaceTime() != null;
+
+            if (a1HasTime && a2HasTime) {
+                return a1.getRaceTime().compareTo(a2.getRaceTime());
+            } else if (a1HasTime) {
+                return -1;
+            } else if (a2HasTime) {
+                return 1;
+            } else {
+                return Integer.compare(a1.hashCode(), a2.hashCode());
+            }
+        };
     }
 }
