@@ -256,6 +256,20 @@ class StandardSeedingStrategyImplTest {
 	// ==================== getDefaultComparator ====================
 
 	@Test
+	@DisplayName("generateSeeding: raceTime为空应抛出ValidationException")
+	void nullRaceTimeThrowsValidationException() {
+		List<Athlete> athletes = new ArrayList<>();
+		athletes.add(new Athlete("WithTime", RaceTime.parse("1:00.00")));
+		athletes.add(new Athlete("WithoutTime", null));
+
+		ValidationException exception = assertThrows(ValidationException.class, () -> {
+			strategy.generateSeeding(wrap(athletes), 8);
+		});
+
+		assertTrue(exception.getMessage().contains("raceTime"));
+	}
+
+	@Test
 	@DisplayName("getDefaultComparator: 成绩小的应排在前面")
 	void defaultComparatorOrdersByRaceTime() {
 		Comparator<? super Athlete> comparator = strategy.getDefaultComparator();
@@ -289,31 +303,6 @@ class StandardSeedingStrategyImplTest {
 
 		int expected = Integer.compare(a.hashCode(), b.hashCode());
 		assertEquals(expected, comparator.compare(a, b));
-	}
-
-	@Test
-	@DisplayName("generateSeeding: 混合有成绩和无成绩的运动员应正确排序")
-	void mixedNullAndNonNullRaceTimeSorting() {
-		List<Athlete> athletes = new ArrayList<>();
-		athletes.add(new Athlete("NoTime1", null));
-		athletes.add(new Athlete("Fast", RaceTime.parse("1:00.00")));
-		athletes.add(new Athlete("NoTime2", null));
-		athletes.add(new Athlete("Slow", RaceTime.parse("2:00.00")));
-
-		strategy.generateSeeding(wrap(athletes), 8);
-
-		// 有成绩的在前，按成绩排序；无成绩的在后，按 hashCode 排序
-		assertEquals("Fast", athletes.get(0).getName());
-		assertEquals("Slow", athletes.get(1).getName());
-		// 后两位是无成绩的，按 hashCode 排序
-		boolean noTime1First = athletes.get(2).getName().equals("NoTime1");
-		boolean noTime2First = athletes.get(2).getName().equals("NoTime2");
-		assertTrue(noTime1First || noTime2First);
-		if (noTime1First) {
-			assertEquals("NoTime2", athletes.get(3).getName());
-		} else {
-			assertEquals("NoTime1", athletes.get(3).getName());
-		}
 	}
 
 	// ==================== 辅助方法 ====================

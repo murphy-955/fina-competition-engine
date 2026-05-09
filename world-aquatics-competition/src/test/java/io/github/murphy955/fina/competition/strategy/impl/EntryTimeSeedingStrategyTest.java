@@ -167,6 +167,18 @@ class EntryTimeSeedingStrategyTest {
         assertEquals("Slow", athletes.get(1).getName());
     }
 
+    @Test
+    @DisplayName("报名编排: 允许所有运动员raceTime为空")
+    void allNullRaceTimeAllowed() {
+        List<Athlete> athletes = new ArrayList<>();
+        athletes.add(new Athlete("A", null));
+        athletes.add(new Athlete("B", null));
+        athletes.add(new Athlete("C", null));
+
+        // 不应抛出异常
+        assertDoesNotThrow(() -> strategy.generateSeeding(wrap(athletes), 8));
+    }
+
     // ==================== 辅助方法 ====================
 
     /**

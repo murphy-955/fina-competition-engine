@@ -1,5 +1,6 @@
 package io.github.murphy955.fina.competition.strategy.impl;
 
+import io.github.murphy955.fina.common.exception.ValidationException;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,20 @@ class SemiFinalsSeedingStrategyTest {
 	@BeforeEach
 	void setUp() {
 		strategy = new SemiFinalsSeedingStrategy();
+	}
+
+	@Test
+	@DisplayName("半决赛: raceTime为空应抛出ValidationException")
+	void nullRaceTimeThrowsValidationException() {
+		List<Athlete> athletes = new ArrayList<>();
+		athletes.add(new Athlete("WithTime", RaceTime.parse("1:00.00")));
+		athletes.add(new Athlete("WithoutTime", null));
+
+		ValidationException exception = assertThrows(ValidationException.class, () -> {
+			strategy.generateSeeding(wrap(athletes), 8);
+		});
+
+		assertTrue(exception.getMessage().contains("raceTime"));
 	}
 
 	@Test
