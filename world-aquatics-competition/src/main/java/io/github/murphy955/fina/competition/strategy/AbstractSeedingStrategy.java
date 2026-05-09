@@ -1,5 +1,6 @@
 package io.github.murphy955.fina.competition.strategy;
 
+import io.github.murphy955.fina.common.exception.ValidationException;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public abstract class AbstractSeedingStrategy implements SeedingStrategy {
         LaneAllocator actualLaneRule = laneRule != null ? laneRule : defaultLaneAllocator;
 
         for (List<Athlete> athleteList : athletes.values()) {
+            validateAthletes(athleteList);
             athleteList.sort(actualSortRule);
             List<List<Athlete>> groups = distributeIntoGroups(new ArrayList<>(athleteList), laneCount);
 
@@ -40,6 +42,25 @@ public abstract class AbstractSeedingStrategy implements SeedingStrategy {
                 for (Athlete athlete : group) {
                     athlete.setGroup(groupIndex + 1);
                 }
+            }
+        }
+    }
+
+    /**
+     * 验证运动员列表是否满足编排前置条件。
+     * <p>默认实现要求所有运动员的 {@code raceTime} 均不为空，否则抛出
+     * {@link ValidationException}。子类可覆盖此方法以放宽或收紧约束。</p>
+     *
+     * @param athletes 待验证的运动员列表
+     */
+    protected void validateAthletes(List<Athlete> athletes) {
+        for (Athlete athlete : athletes) {
+            if (athlete.getRaceTime() == null) {
+                throw new ValidationException(
+                        "athlete.raceTime must not be null",
+                        "Athlete '" + athlete.getName() + "' has no raceTime. " +
+                                "Seeding requires a valid race time for all athletes."
+                );
             }
         }
     }

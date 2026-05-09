@@ -25,6 +25,11 @@ import java.util.List;
 public class EntryTimeSeedingStrategy extends AbstractSeedingStrategy {
 
     @Override
+    protected void validateAthletes(List<Athlete> athletes) {
+        // 报名成绩编排允许 raceTime 为空，不做校验
+    }
+
+    @Override
     protected List<List<Athlete>> distributeIntoGroups(List<Athlete> sorted, int laneCount) {
         int totalAthletes = sorted.size();
         int totalGroups = (totalAthletes + laneCount - 1) / laneCount;
