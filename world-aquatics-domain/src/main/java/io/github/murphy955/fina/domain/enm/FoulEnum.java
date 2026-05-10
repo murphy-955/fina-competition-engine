@@ -924,4 +924,36 @@ public enum FoulEnum {
     public boolean isDidNotFinish() {
         return resultCode == RaceResultCodeEnum.DNF;
     }
+
+    /**
+     * 判断指定技术官员是否有权限上报/处理本犯规
+     * <p>基于 {@link AuthorityEnum} 位掩码进行按位与运算：</p>
+     * <pre>(this.permissions &amp; position.getPermissions()) != 0</pre>
+     *
+     * @param position 技术官员职位
+     * @return true 表示该职位至少拥有一项处理此犯规所需的权限
+     */
+    public boolean canBeReportedBy(OfficialPositionEnum position) {
+        return (this.permissions & position.getPermissions()) != 0;
+    }
+
+    /**
+     * 判断本犯规是否需要指定权限位中的任意一项即可处理
+     *
+     * @param permissionMask 权限位掩码
+     * @return true 表示该权限掩码与本犯规所需权限有交集
+     */
+    public boolean requiresAnyPermission(int permissionMask) {
+        return (this.permissions & permissionMask) != 0;
+    }
+
+    /**
+     * 判断本犯规是否需要指定权限位中的全部权限才能处理
+     *
+     * @param permissionMask 权限位掩码
+     * @return true 表示本犯规所需权限包含该权限掩码的全部位
+     */
+    public boolean requiresAllPermissions(int permissionMask) {
+        return (this.permissions & permissionMask) == permissionMask;
+    }
 }

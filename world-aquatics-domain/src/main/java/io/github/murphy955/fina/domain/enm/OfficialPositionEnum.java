@@ -104,4 +104,46 @@ public enum OfficialPositionEnum {
     public int getPermissions() {
         return permissions;
     }
+
+    /**
+     * 判断该技术官员是否具备上报指定犯规类型的权限
+     * <p>基于 {@link AuthorityEnum} 位掩码进行按位与运算：</p>
+     * <pre>(this.permissions &amp; foul.getPermissions()) != 0</pre>
+     *
+     * @param foul 待判断的犯规类型
+     * @return true 表示该职位至少拥有一项处理此犯规所需的权限
+     */
+    public boolean hasPermission(FoulEnum foul) {
+        return (this.permissions & foul.getPermissions()) != 0;
+    }
+
+    /**
+     * 判断该技术官员是否具备指定的单项权限
+     *
+     * @param authority 权限枚举
+     * @return true 表示拥有该权限
+     */
+    public boolean hasPermission(AuthorityEnum authority) {
+        return (this.permissions & authority.getPermissions()) != 0;
+    }
+
+    /**
+     * 判断该技术官员是否具备指定权限掩码中的任意一项权限
+     *
+     * @param permissionMask 权限位掩码
+     * @return true 表示至少拥有一项匹配权限
+     */
+    public boolean hasAnyPermission(int permissionMask) {
+        return (this.permissions & permissionMask) != 0;
+    }
+
+    /**
+     * 判断该技术官员是否具备指定权限掩码中的全部权限
+     *
+     * @param permissionMask 权限位掩码
+     * @return true 表示拥有全部匹配权限
+     */
+    public boolean hasAllPermissions(int permissionMask) {
+        return (this.permissions & permissionMask) == permissionMask;
+    }
 }
