@@ -42,6 +42,19 @@ public class RaceTime implements Comparable<RaceTime> {
     }
 
     /**
+     * 解析时间字符串，默认成绩结果为 {@code OK}
+     * <p>等同于 {@code parse(timeStr, RaceResultCodeEnum.OK)}</p>
+     *
+     * @param timeStr 未处理的时间字符串
+     * @return io.github.murphy955.fina.domain.entity.achievements.RaceTime
+     * @author 李泽聿
+     * @since 2026-05-07 15:30
+     */
+    public static RaceTime parse(String timeStr) {
+        return parse(timeStr, RaceResultCodeEnum.OK);
+    }
+
+    /**
      * 传入时间字符串仅支持以下格式
      * <ul>
      *     <li>1:03.79（必须有冒号，秒部分严格 00-59，毫秒部分严格00-99）</li>
@@ -49,7 +62,8 @@ public class RaceTime implements Comparable<RaceTime> {
      *     <li>63.79（纯秒数，可 >=60，毫秒部分严格00-99）</li>
      * </ul>
      *
-     * @param timeStr 未处理的时间字符串
+     * @param timeStr        未处理的时间字符串
+     * @param raceResultCode 比赛结果代码
      * @return io.github.murphy955.fina.domain.entity.achievements.RaceTime
      * @author 李泽聿
      * @since 2026-05-07 15:30
