@@ -1,5 +1,7 @@
 package io.github.murphy955.fina.domain.entity.achievements;
 
+import io.github.murphy955.fina.domain.enm.RaceResultCodeEnum;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,6 +13,8 @@ import java.util.regex.Pattern;
  */
 public class RaceTime implements Comparable<RaceTime> {
     private final long totalHundredths;
+    
+    private final RaceResultCodeEnum raceResultCode;
 
     private static final long MAX_HUNDREDTHS = 99 * 6000L + 59 * 100L + 99;
     // 格式1: 1:03.79（必须有冒号，秒部分严格 00-59）
@@ -20,7 +24,7 @@ public class RaceTime implements Comparable<RaceTime> {
     // 格式3: 63.79（纯秒数，可 >=60）
     private static final Pattern PATTERN_SECONDS_ONLY = Pattern.compile("^(\\d+)\\.([0-9]{2})$");
 
-    private RaceTime(long totalHundredths) {
+    private RaceTime(long totalHundredths, RaceResultCodeEnum raceResultCode) {
         if (totalHundredths < 0) {
             throw new IllegalArgumentException("Race time cannot be negative");
         }
@@ -29,6 +33,7 @@ public class RaceTime implements Comparable<RaceTime> {
                     String.format("Time %d hundredths exceeds maximum allowed 99:59.99", totalHundredths));
         }
         this.totalHundredths = totalHundredths;
+        this.raceResultCode = raceResultCode;
     }
 
     @Override
@@ -49,7 +54,7 @@ public class RaceTime implements Comparable<RaceTime> {
      * @author 李泽聿
      * @since 2026-05-07 15:30
      */
-    public static RaceTime parse(String timeStr) {
+    public static RaceTime parse(String timeStr, RaceResultCodeEnum raceResultCode) {
         if (timeStr == null || timeStr.isBlank()) {
             throw new IllegalArgumentException("Time string must not be blank");
         }
@@ -61,7 +66,7 @@ public class RaceTime implements Comparable<RaceTime> {
             int minutes = Integer.parseInt(m1.group(1));
             int seconds = Integer.parseInt(m1.group(2));
             int hundredths = Integer.parseInt(m1.group(3));
-            return fromParts(minutes, seconds, hundredths);
+            return fromParts(minutes, seconds, hundredths, raceResultCode);
         }
 
         // 尝试 1-03-79
@@ -70,7 +75,7 @@ public class RaceTime implements Comparable<RaceTime> {
             int minutes = Integer.parseInt(m2.group(1));
             int seconds = Integer.parseInt(m2.group(2));
             int hundredths = Integer.parseInt(m2.group(3));
-            return fromParts(minutes, seconds, hundredths);
+            return fromParts(minutes, seconds, hundredths, raceResultCode);
         }
 
         // 尝试 63.79
@@ -79,7 +84,7 @@ public class RaceTime implements Comparable<RaceTime> {
             long totalSeconds = Long.parseLong(m3.group(1));
             int hundredths = Integer.parseInt(m3.group(2));
             long total = totalSeconds * 100L + hundredths;
-            return new RaceTime(total);
+            return new RaceTime(total, raceResultCode);
         }
 
         throw new IllegalArgumentException(
@@ -96,7 +101,7 @@ public class RaceTime implements Comparable<RaceTime> {
      * @author 李泽聿
      * @since 2026-05-07 15:28
      */
-    private static RaceTime fromParts(int minutes, int seconds, int hundredths) {
+    private static RaceTime fromParts(int minutes, int seconds, int hundredths, RaceResultCodeEnum raceResultCode) {
         if (seconds < 0 || seconds >= 60) {
             throw new IllegalArgumentException("Seconds must be in 00-59");
         }
@@ -104,7 +109,7 @@ public class RaceTime implements Comparable<RaceTime> {
             throw new IllegalArgumentException("Hundredths must be in 00-99");
         }
         long total = minutes * 6000L + seconds * 100L + hundredths;
-        return new RaceTime(total);
+        return new RaceTime(total, raceResultCode);
     }
 
     /**
@@ -144,5 +149,9 @@ public class RaceTime implements Comparable<RaceTime> {
             return false;
         }
         return this.totalHundredths == ((RaceTime) obj).totalHundredths;
+    }
+
+    public RaceResultCodeEnum getRaceResultCode() {
+        return raceResultCode;
     }
 }
