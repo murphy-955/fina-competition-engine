@@ -1,6 +1,7 @@
 package io.github.murphy955.fina.competition.strategy;
 
 import io.github.murphy955.fina.common.exception.ValidationException;
+import io.github.murphy955.fina.domain.enm.RaceResultCodeEnum;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 
 import java.util.ArrayList;
@@ -77,7 +78,8 @@ public abstract class AbstractSeedingStrategy implements SeedingStrategy {
     /**
      * 默认排序规则：
      * <ul>
-     *     <li>优先安排 {@code raceTime} 不为空的运动员（成绩越小越快）</li>
+     *     <li>优先按 {@link RaceResultCodeEnum#getSortOrder()} 排序，{@code OK} 始终在前</li>
+     *     <li>结果码相同的运动员按 {@code raceTime} 排序（成绩越小越快）</li>
      *     <li>{@code raceTime} 为空的运动员排在后面，按 {@link Athlete#hashCode()} 排序</li>
      * </ul>
      *
@@ -85,6 +87,15 @@ public abstract class AbstractSeedingStrategy implements SeedingStrategy {
      */
     public Comparator<? super Athlete> getDefaultComparator() {
         return (a1, a2) -> {
+            // 1. 先按结果码排序：OK 在前，非 OK 按 sortOrder 升序排在后面
+            int sortOrder1 = a1.getResultCode() != null ? a1.getResultCode().getSortOrder() : 0;
+            int sortOrder2 = a2.getResultCode() != null ? a2.getResultCode().getSortOrder() : 0;
+            int resultCodeCompare = Integer.compare(sortOrder1, sortOrder2);
+            if (resultCodeCompare != 0) {
+                return resultCodeCompare;
+            }
+
+            // 2. 结果码相同，按成绩排序
             boolean a1HasTime = a1.getRaceTime() != null;
             boolean a2HasTime = a2.getRaceTime() != null;
 
