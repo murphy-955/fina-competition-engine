@@ -875,7 +875,13 @@ public enum FoulEnum {
     INCOMPLETE_DISTANCE("未完成全程",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DNF);
+            RaceResultCodeEnum.DNF),
+
+    /* ==================== 无犯规且成绩有效 ==================== */
+    OK("无犯规且成绩有效",
+            OfficialPositionEnum.TIMER.getPermissions()
+                    |OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
+            RaceResultCodeEnum.OK);
 
     private final String description;
     private final int permissions;
