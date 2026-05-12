@@ -1,12 +1,14 @@
-package io.github.murphy955.fina.competition.service;
+package io.github.murphy955.fina.competition.strategy.impl.service;
 
 import io.github.murphy955.fina.competition.strategy.SeedingStrategy;
 import io.github.murphy955.fina.competition.strategy.impl.HeatsSeedingStrategy;
-import io.github.murphy955.fina.domain.enm.EventTypeEnum;
-import io.github.murphy955.fina.domain.enm.GenderEnum;
-import io.github.murphy955.fina.domain.enm.StrokeEnum;
+import io.github.murphy955.fina.domain.enm.EventType;
+import io.github.murphy955.fina.domain.enm.Gender;
+import io.github.murphy955.fina.domain.enm.RaceResultCode;
+import io.github.murphy955.fina.domain.enm.Stroke;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
+import io.github.murphy955.fina.domain.service.RaceKeyRegister;
 import io.github.murphy955.fina.domain.shared.BaseGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,25 +71,25 @@ class CompetitionSeedingIntegrationTest {
 	void fullSeedingWorkflow() {
 		// ========== 1. 定义比赛项目 ==========
 		String men100FreeKey = raceKeyRegister.buildKey(
-				GenderEnum.MALE,
+				Gender.MALE,
 				TestAgeGroup.U18,
 				"100",
-				EventTypeEnum.INDIVIDUAL,
-				StrokeEnum.FREESTYLE
+				EventType.INDIVIDUAL,
+				Stroke.FREESTYLE
 		);
 		String women100BreastKey = raceKeyRegister.buildKey(
-				GenderEnum.FEMALE,
+				Gender.FEMALE,
 				TestAgeGroup.U18,
 				"100",
-				EventTypeEnum.INDIVIDUAL,
-				StrokeEnum.BREASTSTROKE
+				EventType.INDIVIDUAL,
+				Stroke.BREASTSTROKE
 		);
 		String men200FreeKey = raceKeyRegister.buildKey(
-				GenderEnum.MALE,
+				Gender.MALE,
 				TestAgeGroup.U18,
 				"200",
-				EventTypeEnum.INDIVIDUAL,
-				StrokeEnum.FREESTYLE
+				EventType.INDIVIDUAL,
+				Stroke.FREESTYLE
 		);
 
 		// ========== 2. 准备运动员数据 ==========
@@ -122,11 +124,11 @@ class CompetitionSeedingIntegrationTest {
 	@DisplayName("整体流程：长距离项目使用最后2组规则编排")
 	void longDistanceSeedingWorkflow() {
 		String men400FreeKey = raceKeyRegister.buildKey(
-				GenderEnum.MALE,
+				Gender.MALE,
 				TestAgeGroup.SENIOR,
 				"400",
-				EventTypeEnum.INDIVIDUAL,
-				StrokeEnum.FREESTYLE
+				EventType.INDIVIDUAL,
+				Stroke.FREESTYLE
 		);
 
 		Map<String, List<Athlete>> entries = new HashMap<>();
@@ -221,7 +223,7 @@ class CompetitionSeedingIntegrationTest {
 			String name = keyPrefix + "-Athlete" + i;
 			// 成绩从 baseTime 开始，每人慢 1 秒
 			String timeStr = String.format("%.2f", baseTime + i);
-			list.add(new Athlete(name, RaceTime.parse(timeStr)));
+			list.add(new Athlete(name, RaceTime.parse(timeStr), RaceResultCode.OK));
 		}
 		return list;
 	}

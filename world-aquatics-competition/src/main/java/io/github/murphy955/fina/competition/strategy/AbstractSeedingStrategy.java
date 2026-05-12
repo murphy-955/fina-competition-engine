@@ -1,7 +1,6 @@
 package io.github.murphy955.fina.competition.strategy;
 
 import io.github.murphy955.fina.common.exception.ValidationException;
-import io.github.murphy955.fina.domain.enm.RaceResultCodeEnum;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 
 import java.util.ArrayList;
@@ -11,10 +10,23 @@ import java.util.Map;
 
 /**
  * 编排策略抽象基类。
- * <p>封装了公共逻辑：排序、分组分配、泳道分配。</p>
+ * <p>
+ * 封装了编排流程的公共逻辑：验证 → 排序 → 分组分配 → 泳道分配。
+ * 子类只需实现 {@link #distributeIntoGroups(List, int)} 定义不同的分组策略。
+ * </p>
+ * <p>
+ * <strong>默认排序规则：</strong>
+ * <ul>
+ *     <li>{@code resultCode == OK} 的运动员按 {@code raceTime} 从快到慢排序</li>
+ *     <li>{@code resultCode != OK} 的运动员（DQ、DNS、DNF、SCR 等）统一置于队尾，
+ *         内部保持原始顺序，不参与成绩排序</li>
+ * </ul>
+ * 该规则确保无效成绩不会干扰正常编排，且非 OK 运动员之间的相对顺序与报名顺序一致。
+ * </p>
  *
  * @author : 李泽聿
  * @since : 2026:05:08 15:00
+ * @see SeedingStrategy
  */
 public abstract class AbstractSeedingStrategy implements SeedingStrategy {
 
@@ -67,35 +79,59 @@ public abstract class AbstractSeedingStrategy implements SeedingStrategy {
     }
 
     /**
-     * 将已排序的运动员分配到各个小组。
+     * 将已排序的运动员分配到各个小组（Heat）。
+     * <p>传入的 {@code sorted} 列表已按默认规则排序：OK 运动员在前且按成绩排列，
+     * 非 OK 运动员在队尾保持原始顺序。</p>
      *
-     * @param sorted    按成绩从快到慢排序的运动员列表
+     * @param sorted    按成绩从快到慢排序的运动员列表（OK 在前，非 OK 在尾）
      * @param laneCount 泳道数
-     * @return 小组列表，索引0为第1组
+     * @return 小组列表，索引 0 为第 1 组
      */
     protected abstract List<List<Athlete>> distributeIntoGroups(List<Athlete> sorted, int laneCount);
 
     /**
-     * 默认排序规则：
-     * <ul>
-     *     <li>优先按 {@link RaceResultCodeEnum#getSortOrder()} 排序，{@code OK} 始终在前</li>
-     *     <li>结果码相同的运动员按 {@code raceTime} 排序（成绩越小越快）</li>
-     *     <li>{@code raceTime} 为空的运动员排在后面，按 {@link Athlete#hashCode()} 排序</li>
-     * </ul>
+     * 获取默认编排排序比较器。
+     * <p>
+     * 排序逻辑分三层：
+     * </p>
+     * <ol>
+     *     <li><strong>资格分离：</strong>{@code resultCode == OK} 的运动员始终排在
+     *         {@code resultCode != OK} 的运动员之前</li>
+     *     <li><strong>有效成绩排序：</strong>均为 OK 时，按 {@code raceTime} 从小到大排序
+     *         （时间越短越快）。{@code raceTime} 为空的排在有成绩的后面</li>
+     *     <li><strong>无效成绩保持原序：</strong>均为非 OK 时，比较器返回 0，
+     *         利用 {@link List#sort} 的稳定性（TimSort）保持原始报名顺序</li>
+     * </ol>
      *
-     * @return java.util.Comparator<? super io.github.murphy955.fina.domain.entity.athlete.Athlete>
+     * @return 默认编排排序比较器
      */
     public Comparator<? super Athlete> getDefaultComparator() {
         return (a1, a2) -> {
-            // 1. 先按结果码排序：OK 在前，非 OK 按 sortOrder 升序排在后面
-            int sortOrder1 = a1.getResultCode() != null ? a1.getResultCode().getSortOrder() : 0;
-            int sortOrder2 = a2.getResultCode() != null ? a2.getResultCode().getSortOrder() : 0;
-            int resultCodeCompare = Integer.compare(sortOrder1, sortOrder2);
-            if (resultCodeCompare != 0) {
-                return resultCodeCompare;
+            boolean a1Ok = a1.getResultCode() != null && a1.getResultCode().isQualified();
+            boolean a2Ok = a2.getResultCode() != null && a2.getResultCode().isQualified();
+
+            // 1. 资格分离：OK 在前，非 OK 置队尾
+            if (a1Ok && !a2Ok) {
+                return -1;
+            }
+            if (!a1Ok && a2Ok) {
+                return 1;
             }
 
-            // 2. 结果码相同，按成绩排序
+            // 2. 均为非 OK：按结果码 sortOrder 排序（DQ → DNS → DNF → SCR → DSQ）
+            int compare = Integer.compare(a1.hashCode(), a2.hashCode());
+            if (!a1Ok) {
+                int sortOrder1 = a1.getResultCode() != null ? a1.getResultCode().getSortOrder() : 0;
+                int sortOrder2 = a2.getResultCode() != null ? a2.getResultCode().getSortOrder() : 0;
+                int sortCompare = Integer.compare(sortOrder1, sortOrder2);
+                if (sortCompare != 0) {
+                    return sortCompare;
+                }
+                // 同 sortOrder 时按 hashCode 排序以保持确定性
+                return compare;
+            }
+
+            // 3. 均为 OK：按成绩排序（越小越快）
             boolean a1HasTime = a1.getRaceTime() != null;
             boolean a2HasTime = a2.getRaceTime() != null;
 
@@ -106,7 +142,8 @@ public abstract class AbstractSeedingStrategy implements SeedingStrategy {
             } else if (a2HasTime) {
                 return 1;
             } else {
-                return Integer.compare(a1.hashCode(), a2.hashCode());
+                // 成绩均为空时，按 hashCode 排序以保持确定性
+                return compare;
             }
         };
     }

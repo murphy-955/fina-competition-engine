@@ -5,6 +5,7 @@ import io.github.murphy955.fina.competition.strategy.LaneAllocator;
 import io.github.murphy955.fina.competition.strategy.WorldAquaticsLaneAllocator;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
+import io.github.murphy955.fina.domain.enm.RaceResultCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,9 +39,9 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("generateSeeding: 默认应按成绩从小到大排序")
 	void defaultSortingByRaceTime() {
 		List<Athlete> athletes = List.of(
-				new Athlete("Slow", RaceTime.parse("2:00.00")),
-				new Athlete("Fast", RaceTime.parse("1:00.00")),
-				new Athlete("Mid", RaceTime.parse("1:30.00"))
+				new Athlete("Slow", RaceTime.parse("2:00.00"), RaceResultCode.OK),
+				new Athlete("Fast", RaceTime.parse("1:00.00"), RaceResultCode.OK),
+				new Athlete("Mid", RaceTime.parse("1:30.00"), RaceResultCode.OK)
 		);
 		List<Athlete> mutable = new ArrayList<>(athletes);
 
@@ -55,9 +56,9 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("generateSeeding: 自定义比较器应按名称排序")
 	void customSortingByName() {
 		List<Athlete> athletes = List.of(
-				new Athlete("Charlie", RaceTime.parse("1:00.00")),
-				new Athlete("Alice", RaceTime.parse("2:00.00")),
-				new Athlete("Bob", RaceTime.parse("1:30.00"))
+				new Athlete("Charlie", RaceTime.parse("1:00.00"), RaceResultCode.OK),
+				new Athlete("Alice", RaceTime.parse("2:00.00"), RaceResultCode.OK),
+				new Athlete("Bob", RaceTime.parse("1:30.00"), RaceResultCode.OK)
 		);
 		List<Athlete> mutable = new ArrayList<>(athletes);
 
@@ -72,8 +73,8 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("generateSeeding: null 比较器应使用默认成绩排序")
 	void nullSortRuleUsesDefault() {
 		List<Athlete> athletes = List.of(
-				new Athlete("Slow", RaceTime.parse("2:00.00")),
-				new Athlete("Fast", RaceTime.parse("1:00.00"))
+				new Athlete("Slow", RaceTime.parse("2:00.00"), RaceResultCode.OK),
+				new Athlete("Fast", RaceTime.parse("1:00.00"), RaceResultCode.OK)
 		);
 		List<Athlete> mutable = new ArrayList<>(athletes);
 
@@ -259,8 +260,8 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("generateSeeding: raceTime为空应抛出ValidationException")
 	void nullRaceTimeThrowsValidationException() {
 		List<Athlete> athletes = new ArrayList<>();
-		athletes.add(new Athlete("WithTime", RaceTime.parse("1:00.00")));
-		athletes.add(new Athlete("WithoutTime", null));
+		athletes.add(new Athlete("WithTime", RaceTime.parse("1:00.00"), RaceResultCode.OK));
+		athletes.add(new Athlete("WithoutTime", null,RaceResultCode.OK));
 
 		ValidationException exception = assertThrows(ValidationException.class, () -> {
 			strategy.generateSeeding(wrap(athletes), 8);
@@ -273,8 +274,8 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("getDefaultComparator: 成绩小的应排在前面")
 	void defaultComparatorOrdersByRaceTime() {
 		Comparator<? super Athlete> comparator = strategy.getDefaultComparator();
-		Athlete fast = new Athlete("Fast", RaceTime.parse("1:00.00"));
-		Athlete slow = new Athlete("Slow", RaceTime.parse("2:00.00"));
+		Athlete fast = new Athlete("Fast", RaceTime.parse("1:00.00"), RaceResultCode.OK);
+		Athlete slow = new Athlete("Slow", RaceTime.parse("2:00.00"), RaceResultCode.OK);
 
 		assertTrue(comparator.compare(fast, slow) < 0);
 		assertTrue(comparator.compare(slow, fast) > 0);
@@ -285,8 +286,8 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("getDefaultComparator: raceTime 为空的应排在有成绩的后面")
 	void defaultComparatorNullRaceTimeAfterNonNull() {
 		Comparator<? super Athlete> comparator = strategy.getDefaultComparator();
-		Athlete withTime = new Athlete("WithTime", RaceTime.parse("2:00.00"));
-		Athlete withoutTime = new Athlete("WithoutTime", null);
+		Athlete withTime = new Athlete("WithTime", RaceTime.parse("2:00.00"), RaceResultCode.OK);
+		Athlete withoutTime = new Athlete("WithoutTime", null, RaceResultCode.OK);
 
 		assertTrue(comparator.compare(withTime, withoutTime) < 0,
 				"有成绩的应排在无成绩的前面");
@@ -298,8 +299,8 @@ class StandardSeedingStrategyImplTest {
 	@DisplayName("getDefaultComparator: raceTime 均为空时按 hashCode 排序")
 	void defaultComparatorBothNullRaceTimeByHashCode() {
 		Comparator<? super Athlete> comparator = strategy.getDefaultComparator();
-		Athlete a = new Athlete("A", null);
-		Athlete b = new Athlete("B", null);
+		Athlete a = new Athlete("A", null,RaceResultCode.DNF);
+		Athlete b = new Athlete("B", null,RaceResultCode.DNF);
 
 		int expected = Integer.compare(a.hashCode(), b.hashCode());
 		assertEquals(expected, comparator.compare(a, b));
@@ -314,7 +315,7 @@ class StandardSeedingStrategyImplTest {
 		List<Athlete> list = new ArrayList<>();
 		for (int i = 0; i < count; i++) {
 			String timeStr = String.format("%d.00", 50 + i);
-			list.add(new Athlete("Athlete" + i, RaceTime.parse(timeStr)));
+			list.add(new Athlete("Athlete" + i, RaceTime.parse(timeStr), RaceResultCode.OK));
 		}
 		return list;
 	}

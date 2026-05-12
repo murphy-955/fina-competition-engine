@@ -1,6 +1,7 @@
 package io.github.murphy955.fina.competition.strategy.impl;
 
 import io.github.murphy955.fina.competition.strategy.LaneAllocator;
+import io.github.murphy955.fina.domain.enm.RaceResultCode;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,9 +114,9 @@ class EntryTimeSeedingStrategyTest {
     @DisplayName("报名编排: 自定义sortRule应按名称排序")
     void customSortRule() {
         List<Athlete> athletes = List.of(
-                new Athlete("Charlie", RaceTime.parse("1:00.00")),
-                new Athlete("Alice", RaceTime.parse("2:00.00")),
-                new Athlete("Bob", RaceTime.parse("1:30.00"))
+                new Athlete("Charlie", RaceTime.parse("1:00.00"), RaceResultCode.OK),
+                new Athlete("Alice", RaceTime.parse("2:00.00"), RaceResultCode.OK),
+                new Athlete("Bob", RaceTime.parse("1:30.00"), RaceResultCode.OK)
         );
         List<Athlete> mutable = new ArrayList<>(athletes);
 
@@ -155,10 +156,10 @@ class EntryTimeSeedingStrategyTest {
     @DisplayName("报名编排: 有成绩优先，无成绩按hashCode排后")
     void mixedNullAndNonNullRaceTime() {
         List<Athlete> athletes = new ArrayList<>();
-        athletes.add(new Athlete("NoTime1", null));
-        athletes.add(new Athlete("Fast", RaceTime.parse("1:00.00")));
-        athletes.add(new Athlete("NoTime2", null));
-        athletes.add(new Athlete("Slow", RaceTime.parse("2:00.00")));
+        athletes.add(new Athlete("NoTime1", null, RaceResultCode.OK));
+        athletes.add(new Athlete("Fast", RaceTime.parse("1:00.00"), RaceResultCode.OK));
+        athletes.add(new Athlete("NoTime2", null, RaceResultCode.DNF));
+        athletes.add(new Athlete("Slow", RaceTime.parse("2:00.00"), RaceResultCode.OK));
 
         strategy.generateSeeding(wrap(athletes), 8);
 
@@ -171,9 +172,9 @@ class EntryTimeSeedingStrategyTest {
     @DisplayName("报名编排: 允许所有运动员raceTime为空")
     void allNullRaceTimeAllowed() {
         List<Athlete> athletes = new ArrayList<>();
-        athletes.add(new Athlete("A", null));
-        athletes.add(new Athlete("B", null));
-        athletes.add(new Athlete("C", null));
+        athletes.add(new Athlete("A", null, RaceResultCode.DNS));
+        athletes.add(new Athlete("B", null, RaceResultCode.DNF));
+        athletes.add(new Athlete("C", null, RaceResultCode.DSQ));
 
         // 不应抛出异常
         assertDoesNotThrow(() -> strategy.generateSeeding(wrap(athletes), 8));
@@ -188,7 +189,7 @@ class EntryTimeSeedingStrategyTest {
         List<Athlete> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             String timeStr = String.format("%d.00", 50 + i);
-            list.add(new Athlete("Athlete" + i, RaceTime.parse(timeStr)));
+            list.add(new Athlete("Athlete" + i, RaceTime.parse(timeStr), RaceResultCode.OK));
         }
         return list;
     }

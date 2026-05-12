@@ -1,5 +1,6 @@
 package io.github.murphy955.fina.domain.entity.athlete;
 
+import io.github.murphy955.fina.domain.enm.RaceResultCode;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 
 /**
@@ -10,6 +11,6 @@ import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
  */
 public class CommonAthlete extends Athlete{
     public CommonAthlete(String name, RaceTime raceTime) {
-        super(name, raceTime);
+        super(name, raceTime, RaceResultCode.OK);
     }
 }

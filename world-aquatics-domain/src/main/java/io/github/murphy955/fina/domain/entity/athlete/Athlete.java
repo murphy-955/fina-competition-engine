@@ -122,15 +122,6 @@ public class Athlete {
         this.resultCode = resultCode;
     }
 
-    /**
-     * @deprecated 请使用 {@link #Athlete(String, RaceTime, RaceResultCode)} 显式传入结果码，
-     * 以便编排系统正确识别成绩有效/无效状态。
-     */
-    @Deprecated
-    public Athlete(String name, RaceTime raceTime) {
-        this(name, raceTime, RaceResultCode.OK);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
