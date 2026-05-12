@@ -90,8 +90,12 @@ public class Entry implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Entry)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Entry)) {
+            return false;
+        }
         Entry other = (Entry) obj;
         return Objects.equals(athlete, other.athlete)
                 && Objects.equals(event, other.event);
