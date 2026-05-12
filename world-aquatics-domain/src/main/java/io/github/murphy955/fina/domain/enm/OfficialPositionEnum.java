@@ -113,7 +113,7 @@ public enum OfficialPositionEnum {
      * @param foul 待判断的犯规类型
      * @return true 表示该职位至少拥有一项处理此犯规所需的权限
      */
-    public boolean hasPermission(FoulEnum foul) {
+    public boolean hasPermission(FoulType foul) {
         return (this.permissions & foul.getPermissions()) != 0;
     }
 

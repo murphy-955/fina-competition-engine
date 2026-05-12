@@ -1,9 +1,9 @@
-package io.github.murphy955.fina.competition.service;
+package io.github.murphy955.fina.domain.service;
 
 import io.github.murphy955.fina.common.exception.ValidationException;
-import io.github.murphy955.fina.domain.enm.EventTypeEnum;
-import io.github.murphy955.fina.domain.enm.GenderEnum;
-import io.github.murphy955.fina.domain.enm.StrokeEnum;
+import io.github.murphy955.fina.domain.enm.EventType;
+import io.github.murphy955.fina.domain.enm.Gender;
+import io.github.murphy955.fina.domain.enm.Stroke;
 import io.github.murphy955.fina.domain.shared.BaseGroup;
 
 
@@ -35,7 +35,7 @@ public class RaceKeyRegister<G extends Enum<G> & BaseGroup> {
      * @author 李泽聿
      * @since 2026-05-08 10:57
      */
-    public String buildKey(GenderEnum gender, G group, String distance, EventTypeEnum event, StrokeEnum stroke) {
+    public String buildKey(Gender gender, G group, String distance, EventType event, Stroke stroke) {
         if (gender == null || group == null || distance == null || event == null || stroke == null) {
             throw new ValidationException("all passed in parameters cannot be empty");
         }

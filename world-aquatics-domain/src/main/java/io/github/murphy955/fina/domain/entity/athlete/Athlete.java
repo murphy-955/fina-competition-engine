@@ -1,6 +1,8 @@
 package io.github.murphy955.fina.domain.entity.athlete;
 
-import io.github.murphy955.fina.domain.enm.RaceResultCodeEnum;
+import io.github.murphy955.fina.domain.enm.Gender;
+import io.github.murphy955.fina.domain.enm.RaceResultCode;
+import io.github.murphy955.fina.domain.enm.SportClass;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 
 /**
@@ -21,6 +23,16 @@ public class Athlete {
     private RaceTime raceTime;
 
     /**
+     * 性别
+     */
+    private Gender gender;
+
+    /**
+     * 残奥分级（如 S6, SB7, SM8），非残奥项目可为 null
+     */
+    private SportClass sportClass;
+
+    /**
      * 比赛结果代码（DQ / DNS / DNF / SCR / OK 等）
      * <p>在编排（seeding）时用于区分成绩有效与无效运动员：</p>
      * <ul>
@@ -28,7 +40,7 @@ public class Athlete {
      *     <li>非 {@code OK} — 排至所有 OK 运动员之后</li>
      * </ul>
      */
-    private RaceResultCodeEnum resultCode;
+    private RaceResultCode resultCode;
 
     /**
      * 泳道
@@ -49,7 +61,23 @@ public class Athlete {
         return raceTime;
     }
 
-    public RaceResultCodeEnum getResultCode() {
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public SportClass getSportClass() {
+        return sportClass;
+    }
+
+    public void setSportClass(SportClass sportClass) {
+        this.sportClass = sportClass;
+    }
+
+    public RaceResultCode getResultCode() {
         return resultCode;
     }
 
@@ -73,7 +101,7 @@ public class Athlete {
         this.raceTime = raceTime;
     }
 
-    public void setResultCode(RaceResultCodeEnum resultCode) {
+    public void setResultCode(RaceResultCode resultCode) {
         this.resultCode = resultCode;
     }
 
@@ -88,19 +116,19 @@ public class Athlete {
      * @param raceTime   成绩（可为 null）
      * @param resultCode 比赛结果代码
      */
-    public Athlete(String name, RaceTime raceTime, RaceResultCodeEnum resultCode) {
+    public Athlete(String name, RaceTime raceTime, RaceResultCode resultCode) {
         this.name = name;
         this.raceTime = raceTime;
         this.resultCode = resultCode;
     }
 
     /**
-     * @deprecated 请使用 {@link #Athlete(String, RaceTime, RaceResultCodeEnum)} 显式传入结果码，
+     * @deprecated 请使用 {@link #Athlete(String, RaceTime, RaceResultCode)} 显式传入结果码，
      * 以便编排系统正确识别成绩有效/无效状态。
      */
     @Deprecated
     public Athlete(String name, RaceTime raceTime) {
-        this(name, raceTime, RaceResultCodeEnum.OK);
+        this(name, raceTime, RaceResultCode.OK);
     }
 
     @Override
@@ -127,6 +155,8 @@ public class Athlete {
                 "name='" + name + '\'' +
                 ", raceTime=" + raceTime +
                 ", resultCode=" + resultCode +
+                ", gender=" + gender +
+                ", sportClass=" + sportClass +
                 ", swimLane=" + swimLane +
                 ", group=" + group +
                 '}';

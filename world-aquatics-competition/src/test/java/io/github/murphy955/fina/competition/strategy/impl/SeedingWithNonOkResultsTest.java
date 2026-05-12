@@ -1,7 +1,7 @@
 package io.github.murphy955.fina.competition.strategy.impl;
 
 import io.github.murphy955.fina.competition.strategy.SeedingStrategy;
-import io.github.murphy955.fina.domain.enm.RaceResultCodeEnum;
+import io.github.murphy955.fina.domain.enm.RaceResultCode;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,16 +41,16 @@ class SeedingWithNonOkResultsTest {
 	@DisplayName("预赛: 混合 OK 与非 OK，OK 在前并正常分组，非 OK 排在最后")
 	void heatsMixedOkAndNonOk() {
 		List<Athlete> athletes = Arrays.asList(
-				new Athlete("A_DQ", RaceTime.parse("55.00"), RaceResultCodeEnum.DQ),
-				new Athlete("B_OK", RaceTime.parse("52.00"), RaceResultCodeEnum.OK),
-				new Athlete("C_DNS", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),
-				new Athlete("D_OK", RaceTime.parse("51.00"), RaceResultCodeEnum.OK),
-				new Athlete("E_DNF", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF),
-				new Athlete("F_OK", RaceTime.parse("53.00"), RaceResultCodeEnum.OK),
-				new Athlete("G_SCR", RaceTime.parse("0.00"), RaceResultCodeEnum.SCR),
-				new Athlete("H_OK", RaceTime.parse("54.00"), RaceResultCodeEnum.OK),
-				new Athlete("I_DSQ", RaceTime.parse("0.00"), RaceResultCodeEnum.DSQ),
-				new Athlete("J_OK", RaceTime.parse("50.00"), RaceResultCodeEnum.OK)
+				new Athlete("A_DQ", RaceTime.parse("55.00"), RaceResultCode.DQ),
+				new Athlete("B_OK", RaceTime.parse("52.00"), RaceResultCode.OK),
+				new Athlete("C_DNS", RaceTime.parse("0.00"), RaceResultCode.DNS),
+				new Athlete("D_OK", RaceTime.parse("51.00"), RaceResultCode.OK),
+				new Athlete("E_DNF", RaceTime.parse("0.00"), RaceResultCode.DNF),
+				new Athlete("F_OK", RaceTime.parse("53.00"), RaceResultCode.OK),
+				new Athlete("G_SCR", RaceTime.parse("0.00"), RaceResultCode.SCR),
+				new Athlete("H_OK", RaceTime.parse("54.00"), RaceResultCode.OK),
+				new Athlete("I_DSQ", RaceTime.parse("0.00"), RaceResultCode.DSQ),
+				new Athlete("J_OK", RaceTime.parse("50.00"), RaceResultCode.OK)
 		);
 		entries.put("heat", new ArrayList<>(athletes));
 
@@ -67,23 +67,23 @@ class SeedingWithNonOkResultsTest {
 		assertEquals("H_OK", sorted.get(4).getName()); // 54.00
 
 		// 后 5 名是非 OK，按 DQ → DNS → DNF → SCR → DSQ
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(5).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(6).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(7).getResultCode());
-		assertEquals(RaceResultCodeEnum.SCR, sorted.get(8).getResultCode());
-		assertEquals(RaceResultCodeEnum.DSQ, sorted.get(9).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(5).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(6).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(7).getResultCode());
+		assertEquals(RaceResultCode.SCR, sorted.get(8).getResultCode());
+		assertEquals(RaceResultCode.DSQ, sorted.get(9).getResultCode());
 	}
 
 	@Test
 	@DisplayName("预赛: 全部非 OK 时，仍按规则排序并分到同一组")
 	void heatsAllNonOk() {
 		List<Athlete> athletes = Arrays.asList(
-				new Athlete("A_DSQ", RaceTime.parse("0.00"), RaceResultCodeEnum.DSQ),
-				new Athlete("B_DNF", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF),
-				new Athlete("C_DNS", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),
-				new Athlete("D_SCR", RaceTime.parse("0.00"), RaceResultCodeEnum.SCR),
-				new Athlete("E_DQ", RaceTime.parse("0.00"), RaceResultCodeEnum.DQ),
-				new Athlete("F_DNF", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF)
+				new Athlete("A_DSQ", RaceTime.parse("0.00"), RaceResultCode.DSQ),
+				new Athlete("B_DNF", RaceTime.parse("0.00"), RaceResultCode.DNF),
+				new Athlete("C_DNS", RaceTime.parse("0.00"), RaceResultCode.DNS),
+				new Athlete("D_SCR", RaceTime.parse("0.00"), RaceResultCode.SCR),
+				new Athlete("E_DQ", RaceTime.parse("0.00"), RaceResultCode.DQ),
+				new Athlete("F_DNF", RaceTime.parse("0.00"), RaceResultCode.DNF)
 		);
 		entries.put("heat", new ArrayList<>(athletes));
 
@@ -93,12 +93,12 @@ class SeedingWithNonOkResultsTest {
 		List<Athlete> sorted = entries.get("heat");
 
 		// 全部非 OK，按 DQ → DNS → DNF → SCR → DSQ
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(0).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(1).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(2).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(3).getResultCode());
-		assertEquals(RaceResultCodeEnum.SCR, sorted.get(4).getResultCode());
-		assertEquals(RaceResultCodeEnum.DSQ, sorted.get(5).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(0).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(1).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(2).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(3).getResultCode());
+		assertEquals(RaceResultCode.SCR, sorted.get(4).getResultCode());
+		assertEquals(RaceResultCode.DSQ, sorted.get(5).getResultCode());
 
 		// 6 人 ≤ 8 泳道，应在同一组
 		assertEquals(1, sorted.get(0).getGroup());
@@ -108,16 +108,16 @@ class SeedingWithNonOkResultsTest {
 	@DisplayName("预赛: 长距离项目混合 OK 与非 OK")
 	void heatsLongDistanceMixed() {
 		List<Athlete> athletes = Arrays.asList(
-				new Athlete("A_OK", RaceTime.parse("4:15.00"), RaceResultCodeEnum.OK),
-				new Athlete("B_OK", RaceTime.parse("4:10.00"), RaceResultCodeEnum.OK),
-				new Athlete("C_DQ", RaceTime.parse("4:05.00"), RaceResultCodeEnum.DQ),
-				new Athlete("D_OK", RaceTime.parse("4:20.00"), RaceResultCodeEnum.OK),
-				new Athlete("E_DNS", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),
-				new Athlete("F_OK", RaceTime.parse("4:12.00"), RaceResultCodeEnum.OK),
-				new Athlete("G_OK", RaceTime.parse("4:08.00"), RaceResultCodeEnum.OK),
-				new Athlete("H_DNF", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF),
-				new Athlete("I_OK", RaceTime.parse("4:18.00"), RaceResultCodeEnum.OK),
-				new Athlete("J_OK", RaceTime.parse("4:22.00"), RaceResultCodeEnum.OK)
+				new Athlete("A_OK", RaceTime.parse("4:15.00"), RaceResultCode.OK),
+				new Athlete("B_OK", RaceTime.parse("4:10.00"), RaceResultCode.OK),
+				new Athlete("C_DQ", RaceTime.parse("4:05.00"), RaceResultCode.DQ),
+				new Athlete("D_OK", RaceTime.parse("4:20.00"), RaceResultCode.OK),
+				new Athlete("E_DNS", RaceTime.parse("0.00"), RaceResultCode.DNS),
+				new Athlete("F_OK", RaceTime.parse("4:12.00"), RaceResultCode.OK),
+				new Athlete("G_OK", RaceTime.parse("4:08.00"), RaceResultCode.OK),
+				new Athlete("H_DNF", RaceTime.parse("0.00"), RaceResultCode.DNF),
+				new Athlete("I_OK", RaceTime.parse("4:18.00"), RaceResultCode.OK),
+				new Athlete("J_OK", RaceTime.parse("4:22.00"), RaceResultCode.OK)
 		);
 		entries.put("heat", new ArrayList<>(athletes));
 
@@ -136,9 +136,9 @@ class SeedingWithNonOkResultsTest {
 		assertEquals("J_OK", sorted.get(6).getName());
 
 		// 非 OK 排在后面
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(7).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(8).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(9).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(7).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(8).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(9).getResultCode());
 	}
 
 	// ==================== 半决赛编排 ====================
@@ -147,14 +147,14 @@ class SeedingWithNonOkResultsTest {
 	@DisplayName("半决赛: 混合 OK 与非 OK，OK 进入两组交替分配，非 OK 排在最后")
 	void semiFinalsMixedOkAndNonOk() {
 		List<Athlete> athletes = Arrays.asList(
-				new Athlete("A_OK", RaceTime.parse("52.00"), RaceResultCodeEnum.OK),
-				new Athlete("B_OK", RaceTime.parse("51.00"), RaceResultCodeEnum.OK),
-				new Athlete("C_DQ", RaceTime.parse("50.00"), RaceResultCodeEnum.DQ),
-				new Athlete("D_OK", RaceTime.parse("53.00"), RaceResultCodeEnum.OK),
-				new Athlete("E_OK", RaceTime.parse("54.00"), RaceResultCodeEnum.OK),
-				new Athlete("F_DNS", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),
-				new Athlete("G_OK", RaceTime.parse("55.00"), RaceResultCodeEnum.OK),
-				new Athlete("H_DNF", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF)
+				new Athlete("A_OK", RaceTime.parse("52.00"), RaceResultCode.OK),
+				new Athlete("B_OK", RaceTime.parse("51.00"), RaceResultCode.OK),
+				new Athlete("C_DQ", RaceTime.parse("50.00"), RaceResultCode.DQ),
+				new Athlete("D_OK", RaceTime.parse("53.00"), RaceResultCode.OK),
+				new Athlete("E_OK", RaceTime.parse("54.00"), RaceResultCode.OK),
+				new Athlete("F_DNS", RaceTime.parse("0.00"), RaceResultCode.DNS),
+				new Athlete("G_OK", RaceTime.parse("55.00"), RaceResultCode.OK),
+				new Athlete("H_DNF", RaceTime.parse("0.00"), RaceResultCode.DNF)
 		);
 		entries.put("semi", new ArrayList<>(athletes));
 
@@ -171,9 +171,9 @@ class SeedingWithNonOkResultsTest {
 		assertEquals("G_OK", sorted.get(4).getName()); // 55.00
 
 		// 后 3 名是非 OK
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(5).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(6).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(7).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(5).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(6).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(7).getResultCode());
 
 		// OK 运动员的分组：最快→第2组，次快→第1组，交替
 		Athlete fastest = findByName(sorted, "B_OK");
@@ -186,12 +186,12 @@ class SeedingWithNonOkResultsTest {
 	@DisplayName("半决赛: 全部非 OK 时，仍分两组并按规则排序")
 	void semiFinalsAllNonOk() {
 		List<Athlete> athletes = Arrays.asList(
-				new Athlete("A_DQ", RaceTime.parse("0.00"), RaceResultCodeEnum.DQ),
-				new Athlete("B_DSQ", RaceTime.parse("0.00"), RaceResultCodeEnum.DSQ),
-				new Athlete("C_DNS", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),
-				new Athlete("D_SCR", RaceTime.parse("0.00"), RaceResultCodeEnum.SCR),
-				new Athlete("E_DNF", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF),
-				new Athlete("F_DQ", RaceTime.parse("0.00"), RaceResultCodeEnum.DQ)
+				new Athlete("A_DQ", RaceTime.parse("0.00"), RaceResultCode.DQ),
+				new Athlete("B_DSQ", RaceTime.parse("0.00"), RaceResultCode.DSQ),
+				new Athlete("C_DNS", RaceTime.parse("0.00"), RaceResultCode.DNS),
+				new Athlete("D_SCR", RaceTime.parse("0.00"), RaceResultCode.SCR),
+				new Athlete("E_DNF", RaceTime.parse("0.00"), RaceResultCode.DNF),
+				new Athlete("F_DQ", RaceTime.parse("0.00"), RaceResultCode.DQ)
 		);
 		entries.put("semi", new ArrayList<>(athletes));
 
@@ -201,12 +201,12 @@ class SeedingWithNonOkResultsTest {
 		List<Athlete> sorted = entries.get("semi");
 
 		// 排序验证: DQ → DQ → DNS → DNF → SCR → DSQ
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(0).getResultCode());
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(1).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(2).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(3).getResultCode());
-		assertEquals(RaceResultCodeEnum.SCR, sorted.get(4).getResultCode());
-		assertEquals(RaceResultCodeEnum.DSQ, sorted.get(5).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(0).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(1).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(2).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(3).getResultCode());
+		assertEquals(RaceResultCode.SCR, sorted.get(4).getResultCode());
+		assertEquals(RaceResultCode.DSQ, sorted.get(5).getResultCode());
 
 		// 分组验证: 交替分配，最快(DQ-A)→第2组
 		assertEquals(2, sorted.get(0).getGroup());
@@ -219,14 +219,14 @@ class SeedingWithNonOkResultsTest {
 	@DisplayName("决赛: 混合 OK 与非 OK，OK 在前分配泳道，非 OK 排在最后")
 	void finalsMixedOkAndNonOk() {
 		List<Athlete> athletes = Arrays.asList(
-				new Athlete("A_OK", RaceTime.parse("52.00"), RaceResultCodeEnum.OK),
-				new Athlete("B_OK", RaceTime.parse("51.00"), RaceResultCodeEnum.OK),
-				new Athlete("C_DQ", RaceTime.parse("50.00"), RaceResultCodeEnum.DQ),
-				new Athlete("D_OK", RaceTime.parse("53.00"), RaceResultCodeEnum.OK),
-				new Athlete("E_DNS", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),
-				new Athlete("F_OK", RaceTime.parse("54.00"), RaceResultCodeEnum.OK),
-				new Athlete("G_DNF", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF),
-				new Athlete("H_OK", RaceTime.parse("55.00"), RaceResultCodeEnum.OK)
+				new Athlete("A_OK", RaceTime.parse("52.00"), RaceResultCode.OK),
+				new Athlete("B_OK", RaceTime.parse("51.00"), RaceResultCode.OK),
+				new Athlete("C_DQ", RaceTime.parse("50.00"), RaceResultCode.DQ),
+				new Athlete("D_OK", RaceTime.parse("53.00"), RaceResultCode.OK),
+				new Athlete("E_DNS", RaceTime.parse("0.00"), RaceResultCode.DNS),
+				new Athlete("F_OK", RaceTime.parse("54.00"), RaceResultCode.OK),
+				new Athlete("G_DNF", RaceTime.parse("0.00"), RaceResultCode.DNF),
+				new Athlete("H_OK", RaceTime.parse("55.00"), RaceResultCode.OK)
 		);
 		entries.put("final", new ArrayList<>(athletes));
 
@@ -246,9 +246,9 @@ class SeedingWithNonOkResultsTest {
 		assertEquals("H_OK", sorted.get(4).getName()); // 55.00 → 第2道
 
 		// 非 OK 排在最后
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(5).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(6).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(7).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(5).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(6).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(7).getResultCode());
 
 		// 泳道验证: 8泳道池，最快→第4道
 		assertEquals(4, findByName(sorted, "B_OK").getSwimLane());
@@ -260,14 +260,14 @@ class SeedingWithNonOkResultsTest {
 	@DisplayName("决赛: 第一名 OK，其余全部非 OK，冠军有效其余无排名")
 	void finalsOnlyChampionOk() {
 		List<Athlete> athletes = Arrays.asList(
-				new Athlete("Champion", RaceTime.parse("50.00"), RaceResultCodeEnum.OK),
-				new Athlete("DQ1", RaceTime.parse("51.00"), RaceResultCodeEnum.DQ),
-				new Athlete("DNS1", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),
-				new Athlete("DNF1", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF),
-				new Athlete("SCR1", RaceTime.parse("0.00"), RaceResultCodeEnum.SCR),
-				new Athlete("DSQ1", RaceTime.parse("0.00"), RaceResultCodeEnum.DSQ),
-				new Athlete("DQ2", RaceTime.parse("52.00"), RaceResultCodeEnum.DQ),
-				new Athlete("DNS2", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS)
+				new Athlete("Champion", RaceTime.parse("50.00"), RaceResultCode.OK),
+				new Athlete("DQ1", RaceTime.parse("51.00"), RaceResultCode.DQ),
+				new Athlete("DNS1", RaceTime.parse("0.00"), RaceResultCode.DNS),
+				new Athlete("DNF1", RaceTime.parse("0.00"), RaceResultCode.DNF),
+				new Athlete("SCR1", RaceTime.parse("0.00"), RaceResultCode.SCR),
+				new Athlete("DSQ1", RaceTime.parse("0.00"), RaceResultCode.DSQ),
+				new Athlete("DQ2", RaceTime.parse("52.00"), RaceResultCode.DQ),
+				new Athlete("DNS2", RaceTime.parse("0.00"), RaceResultCode.DNS)
 		);
 		entries.put("final", new ArrayList<>(athletes));
 
@@ -278,7 +278,7 @@ class SeedingWithNonOkResultsTest {
 
 		// 冠军在前
 		assertEquals("Champion", sorted.get(0).getName());
-		assertEquals(RaceResultCodeEnum.OK, sorted.get(0).getResultCode());
+		assertEquals(RaceResultCode.OK, sorted.get(0).getResultCode());
 		assertEquals(4, sorted.get(0).getSwimLane()); // 最快→第4道
 
 		// 其余全部非 OK
@@ -288,13 +288,13 @@ class SeedingWithNonOkResultsTest {
 		}
 
 		// 非 OK 顺序: DQ → DQ → DNS → DNS → DNF → SCR → DSQ
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(1).getResultCode());
-		assertEquals(RaceResultCodeEnum.DQ, sorted.get(2).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(3).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNS, sorted.get(4).getResultCode());
-		assertEquals(RaceResultCodeEnum.DNF, sorted.get(5).getResultCode());
-		assertEquals(RaceResultCodeEnum.SCR, sorted.get(6).getResultCode());
-		assertEquals(RaceResultCodeEnum.DSQ, sorted.get(7).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(1).getResultCode());
+		assertEquals(RaceResultCode.DQ, sorted.get(2).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(3).getResultCode());
+		assertEquals(RaceResultCode.DNS, sorted.get(4).getResultCode());
+		assertEquals(RaceResultCode.DNF, sorted.get(5).getResultCode());
+		assertEquals(RaceResultCode.SCR, sorted.get(6).getResultCode());
+		assertEquals(RaceResultCode.DSQ, sorted.get(7).getResultCode());
 	}
 
 	// ==================== 晋级场景 ====================
@@ -304,14 +304,14 @@ class SeedingWithNonOkResultsTest {
 	void nonOkAthletesShouldNotAdvanceToSemiFinals() {
 		// 模拟预赛结果
 		List<Athlete> prelimResults = Arrays.asList(
-				new Athlete("A", RaceTime.parse("51.00"), RaceResultCodeEnum.OK),
-				new Athlete("B", RaceTime.parse("52.00"), RaceResultCodeEnum.OK),
-				new Athlete("C", RaceTime.parse("50.00"), RaceResultCodeEnum.DQ),  // 取消资格，不应晋级
-				new Athlete("D", RaceTime.parse("53.00"), RaceResultCodeEnum.OK),
-				new Athlete("E", RaceTime.parse("0.00"), RaceResultCodeEnum.DNS),   // 未出发，不应晋级
-				new Athlete("F", RaceTime.parse("54.00"), RaceResultCodeEnum.OK),
-				new Athlete("G", RaceTime.parse("55.00"), RaceResultCodeEnum.OK),
-				new Athlete("H", RaceTime.parse("0.00"), RaceResultCodeEnum.DNF)    // 未完成，不应晋级
+				new Athlete("A", RaceTime.parse("51.00"), RaceResultCode.OK),
+				new Athlete("B", RaceTime.parse("52.00"), RaceResultCode.OK),
+				new Athlete("C", RaceTime.parse("50.00"), RaceResultCode.DQ),  // 取消资格，不应晋级
+				new Athlete("D", RaceTime.parse("53.00"), RaceResultCode.OK),
+				new Athlete("E", RaceTime.parse("0.00"), RaceResultCode.DNS),   // 未出发，不应晋级
+				new Athlete("F", RaceTime.parse("54.00"), RaceResultCode.OK),
+				new Athlete("G", RaceTime.parse("55.00"), RaceResultCode.OK),
+				new Athlete("H", RaceTime.parse("0.00"), RaceResultCode.DNF)    // 未完成，不应晋级
 		);
 		entries.put("prelim", new ArrayList<>(prelimResults));
 
@@ -325,7 +325,7 @@ class SeedingWithNonOkResultsTest {
 				.toList();
 
 		assertEquals(5, qualified.size(), "应有 5 名 OK 运动员晋级");
-		assertTrue(qualified.stream().allMatch(a -> a.getResultCode() == RaceResultCodeEnum.OK));
+		assertTrue(qualified.stream().allMatch(a -> a.getResultCode() == RaceResultCode.OK));
 
 		// 半决赛编排（仅晋级运动员）
 		Map<String, List<Athlete>> semiEntries = new HashMap<>();

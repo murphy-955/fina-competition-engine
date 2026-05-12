@@ -6,7 +6,7 @@ package io.github.murphy955.fina.domain.enm;
  * @author : 李泽聿
  * @since : 2026/05/07 14:10
  */
-public enum StrokeEnum {
+public enum Stroke {
 
     /**
      * 自由泳

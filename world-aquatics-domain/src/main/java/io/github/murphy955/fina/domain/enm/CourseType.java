@@ -6,7 +6,7 @@ package io.github.murphy955.fina.domain.enm;
  * @author : 李泽聿
  * @since : 2026/05/07 14:11
  */
-public enum CourseTypeEnum {
+public enum CourseType {
 
     /**
      * 长池（50米）
@@ -23,7 +23,7 @@ public enum CourseTypeEnum {
      */
     private final int lengthInMeters;
 
-    CourseTypeEnum(int lengthInMeters) {
+    CourseType(int lengthInMeters) {
         this.lengthInMeters = lengthInMeters;
     }
 

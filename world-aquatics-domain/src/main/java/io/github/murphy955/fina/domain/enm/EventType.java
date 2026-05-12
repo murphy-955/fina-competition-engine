@@ -6,7 +6,7 @@ package io.github.murphy955.fina.domain.enm;
  * @author : 李泽聿
  * @since : 2026/05/07 14:11
  */
-public enum EventTypeEnum {
+public enum EventType {
 
     /**
      * 个人项目
@@ -20,7 +20,7 @@ public enum EventTypeEnum {
 
     private final String description;
 
-    EventTypeEnum( String description) {
+    EventType( String description) {
         this.description = description;
     }
 

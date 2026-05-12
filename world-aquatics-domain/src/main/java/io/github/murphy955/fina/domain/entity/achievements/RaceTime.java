@@ -1,6 +1,6 @@
 package io.github.murphy955.fina.domain.entity.achievements;
 
-import io.github.murphy955.fina.domain.enm.RaceResultCodeEnum;
+import io.github.murphy955.fina.domain.enm.RaceResultCode;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class RaceTime implements Comparable<RaceTime> {
     private final long totalHundredths;
     
-    private final RaceResultCodeEnum raceResultCode;
+    private final RaceResultCode raceResultCode;
 
     private static final long MAX_HUNDREDTHS = 99 * 6000L + 59 * 100L + 99;
     // 格式1: 1:03.79（必须有冒号，秒部分严格 00-59）
@@ -24,7 +24,7 @@ public class RaceTime implements Comparable<RaceTime> {
     // 格式3: 63.79（纯秒数，可 >=60）
     private static final Pattern PATTERN_SECONDS_ONLY = Pattern.compile("^(\\d+)\\.([0-9]{2})$");
 
-    private RaceTime(long totalHundredths, RaceResultCodeEnum raceResultCode) {
+    private RaceTime(long totalHundredths, RaceResultCode raceResultCode) {
         if (totalHundredths < 0) {
             throw new IllegalArgumentException("Race time cannot be negative");
         }
@@ -43,7 +43,7 @@ public class RaceTime implements Comparable<RaceTime> {
 
     /**
      * 解析时间字符串，默认成绩结果为 {@code OK}
-     * <p>等同于 {@code parse(timeStr, RaceResultCodeEnum.OK)}</p>
+     * <p>等同于 {@code parse(timeStr, RaceResultCode.OK)}</p>
      *
      * @param timeStr 未处理的时间字符串
      * @return io.github.murphy955.fina.domain.entity.achievements.RaceTime
@@ -51,7 +51,7 @@ public class RaceTime implements Comparable<RaceTime> {
      * @since 2026-05-07 15:30
      */
     public static RaceTime parse(String timeStr) {
-        return parse(timeStr, RaceResultCodeEnum.OK);
+        return parse(timeStr, RaceResultCode.OK);
     }
 
     /**
@@ -68,7 +68,7 @@ public class RaceTime implements Comparable<RaceTime> {
      * @author 李泽聿
      * @since 2026-05-07 15:30
      */
-    public static RaceTime parse(String timeStr, RaceResultCodeEnum raceResultCode) {
+    public static RaceTime parse(String timeStr, RaceResultCode raceResultCode) {
         if (timeStr == null || timeStr.isBlank()) {
             throw new IllegalArgumentException("Time string must not be blank");
         }
@@ -115,7 +115,7 @@ public class RaceTime implements Comparable<RaceTime> {
      * @author 李泽聿
      * @since 2026-05-07 15:28
      */
-    private static RaceTime fromParts(int minutes, int seconds, int hundredths, RaceResultCodeEnum raceResultCode) {
+    private static RaceTime fromParts(int minutes, int seconds, int hundredths, RaceResultCode raceResultCode) {
         if (seconds < 0 || seconds >= 60) {
             throw new IllegalArgumentException("Seconds must be in 00-59");
         }
@@ -165,7 +165,7 @@ public class RaceTime implements Comparable<RaceTime> {
         return this.totalHundredths == ((RaceTime) obj).totalHundredths;
     }
 
-    public RaceResultCodeEnum getRaceResultCode() {
+    public RaceResultCode getRaceResultCode() {
         return raceResultCode;
     }
 }

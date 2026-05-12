@@ -20,7 +20,7 @@ import java.util.Comparator;
  * @author : 李泽聿
  * @since : 2026:05:09
  */
-public enum RaceResultCodeEnum {
+public enum RaceResultCode {
 
     /**
      * 成绩有效（Valid Result）
@@ -89,7 +89,7 @@ public enum RaceResultCodeEnum {
      */
     private final int sortOrder;
 
-    RaceResultCodeEnum(String code, String englishName, String chineseName,
+    RaceResultCode(String code, String englishName, String chineseName,
                        String description, int sortOrder) {
         this.code = code;
         this.englishName = englishName;
@@ -156,14 +156,14 @@ public enum RaceResultCodeEnum {
      * 根据代码字符串查找对应的枚举值
      *
      * @param code 结果代码，如 "DQ"、"dns"
-     * @return 对应的 RaceResultCodeEnum，若找不到则返回 null
+     * @return 对应的 RaceResultCode，若找不到则返回 null
      */
-    public static RaceResultCodeEnum fromCode(String code) {
+    public static RaceResultCode fromCode(String code) {
         if (code == null || code.isBlank()) {
             return null;
         }
         String upper = code.trim().toUpperCase();
-        for (RaceResultCodeEnum value : values()) {
+        for (RaceResultCode value : values()) {
             if (value.code.equals(upper)) {
                 return value;
             }
@@ -175,6 +175,6 @@ public enum RaceResultCodeEnum {
      * 编排排序比较器
      * <p>按 {@link #sortOrder} 升序排列，{@code OK} 始终排在最前。</p>
      */
-    public static final Comparator<RaceResultCodeEnum> SEEDING_COMPARATOR =
-            Comparator.comparingInt(RaceResultCodeEnum::getSortOrder);
+    public static final Comparator<RaceResultCode> SEEDING_COMPARATOR =
+            Comparator.comparingInt(RaceResultCode::getSortOrder);
 }

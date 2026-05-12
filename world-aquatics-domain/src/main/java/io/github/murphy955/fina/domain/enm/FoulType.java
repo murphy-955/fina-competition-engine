@@ -19,7 +19,7 @@ package io.github.murphy955.fina.domain.enm;
  * @author : 李泽聿
  * @since : 2026:05:09
  */
-public enum FoulEnum {
+public enum FoulType {
 
     /* ==================== DQ（取消资格）— 出发犯规 ==================== */
 
@@ -29,7 +29,7 @@ public enum FoulEnum {
     FALSE_START("出发抢跳",
             OfficialPositionEnum.TIMER.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 出发姿势违规：未按规则要求采取正确的出发姿势（如仰泳未抓住握手器等）
@@ -42,7 +42,7 @@ public enum FoulEnum {
     ILLEGAL_START_POSITION("出发姿势违规",
             OfficialPositionEnum.TIMER.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 在出发信号发出前启动
@@ -52,7 +52,7 @@ public enum FoulEnum {
     START_BEFORE_SIGNAL("在出发信号发出前启动",
             OfficialPositionEnum.TIMER.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 游尽犯规（自由泳） ==================== */
 
@@ -64,7 +64,7 @@ public enum FoulEnum {
     MORE_THAN_15_METERS_INTO_THE_WATER("出发或转身后15米线前头未露出水面",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 自由泳游尽违规：身体完全潜入水中
@@ -73,7 +73,7 @@ public enum FoulEnum {
     FREESTYLE_SWIM_IN_VIOLATION_BODY_TOTALLY_SUBMERGED("自由泳游进过程中完全潜入水中",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 自由泳转身或到达终点时未触壁
@@ -83,7 +83,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 游尽犯规（仰泳） ==================== */
 
@@ -98,7 +98,7 @@ public enum FoulEnum {
     BACKSTROKE_SWIM_IN_VIOLATION_SUPINE_POSITION("仰泳游进过程中离开仰卧姿势",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳游尽过程中，身体完全没入水中
@@ -111,7 +111,7 @@ public enum FoulEnum {
     BACKSTROKE_SWIM_IN_VIOLATION_BODY_TOTALLY_UNDER_WATER("仰泳游进过程中完全潜入水中",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳转身蹬离池壁后未保持仰卧姿势
@@ -121,7 +121,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳转身时没有立即开始转身动作
@@ -131,7 +131,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳到达终点时未保持仰卧姿势
@@ -140,7 +140,7 @@ public enum FoulEnum {
     BACKSTROKE_FINISH_NOT_ON_BACK("仰泳到达终点时未保持仰卧姿势",
             OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.TIMER.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 游尽犯规（蛙泳） ==================== */
 
@@ -151,7 +151,7 @@ public enum FoulEnum {
     BREASTSTROKE_LONG_SWIM_BACK_TO_SHOULDER("蛙泳长划手中向后划水超过髋线",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳出发或转身后第一次蹬腿前做超过一次的蝶泳腿
@@ -160,7 +160,7 @@ public enum FoulEnum {
     BREASTSTROKE_LONG_SWIM_BITE_LEGS_OVER_1_TIME("蛙泳出发或转身后第一次蹬腿前做超过一次的蝶泳腿",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳出发或转身后，在第二次划臂两手划至最宽点开始向内划水前，头未露出水面
@@ -169,7 +169,7 @@ public enum FoulEnum {
     BREASTSTROKE_LONG_SWIM_HEAD_EXPOSED("蛙泳出发或转身后，第二次划臂前头未露出水面",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳游进时手未从胸前向前推出
@@ -178,7 +178,7 @@ public enum FoulEnum {
     BREASTSTROKE_HANDS_NOT_PUSHED_FROM_BREAST("蛙泳游进时手未从胸前向前推出",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳游进时肘部未保持在水下
@@ -188,7 +188,7 @@ public enum FoulEnum {
     BREASTSTROKE_ELBOWS_NOT_UNDER_WATER("蛙泳游进时肘部未保持在水下",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳游进时手划回超过髋线
@@ -197,7 +197,7 @@ public enum FoulEnum {
     BREASTSTROKE_HANDS_BEYOND_HIP_LINE("蛙泳游进时手划回超过髋线",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳游进时头未在每个动作周期中露出水面
@@ -206,7 +206,7 @@ public enum FoulEnum {
     BREASTSTROKE_HEAD_NOT_EXPOSED_EACH_CYCLE("蛙泳游进时头未在每个动作周期中露出水面",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳蹬腿时脚未向外翻转
@@ -215,7 +215,7 @@ public enum FoulEnum {
     BREASTSTROKE_FEET_NOT_TURNED_OUT("蛙泳蹬腿时脚未向外翻转",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳游进中做向下海豚式打腿
@@ -224,7 +224,7 @@ public enum FoulEnum {
     BREASTSTROKE_DOWNWARD_BUTTERFLY_KICK("蛙泳游进中做向下海豚式打腿",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳身体必须俯卧
@@ -233,7 +233,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_BODY_MUST_SUPINE("蛙泳身体未保持俯卧",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳动作周期没有按一次手一次腿的顺序进行
@@ -242,7 +242,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_ACTION_CYCLE_NOT_ONE_HAND_ONE_LEG("蛙泳动作周期没有按一次手一次腿的顺序进行",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳两臂动作不同时
@@ -251,7 +251,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_BOTH_ARMS_SHOULDER_ACTION_DIFFERENT("蛙泳两臂动作不同时",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳腿部动作不是同时进行的
@@ -260,7 +260,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_LEGS_NOT_SAME_LEVEL("蛙泳腿部动作不是同时进行的",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳腿两腿交替打水
@@ -269,7 +269,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_LEGS_SWITCH_POSITION("蛙泳腿两腿交替打水",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳肘部超出水面
@@ -278,7 +278,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_ELBOW_OUT_OF_WATER("蛙泳肘部超出水面",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳两臂动作不在同一水平面
@@ -287,7 +287,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_BOTH_ARMS_SHOULDER_ACTION_NOT_SAME_LEVEL("蛙泳两臂动作不在同一水平面",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳手两手没有从胸前伸出
@@ -295,7 +295,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_HANDS_NOT_EXTENDED_FROM_CHEST("蛙泳手两手没有从胸前伸出",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳一次腿部动作完成后，腿部出现上扬或下压现象
@@ -303,7 +303,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_RISE_OR_DEPRESSION_AFTER_ONE_LEG("蛙泳一次腿部动作完成后，腿部出现上扬或下压现象",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 在蛙泳蹬腿过程中，两脚必须做外翻动作
@@ -311,7 +311,7 @@ public enum FoulEnum {
     BREASTSTROKE_SWIM_IN_VIOLATION_LEGS_NOT_EXTENDED_FROM_WATER("在蛙泳蹬腿过程中，两脚必须做外翻动作",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 游尽犯规（蝶泳） ==================== */
 
@@ -322,7 +322,7 @@ public enum FoulEnum {
     BUTTERFLY_SWIM_IN_VIOLATION_BOTH_ARMS_SHOULDER_NOT_BOTH_SHOULDER_ACTION("蝶泳两手臂未同时前摆，或手臂未同时向后划水",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳双臂未经空中前摆
@@ -331,7 +331,7 @@ public enum FoulEnum {
     BUTTERFLY_SWIM_IN_VIOLATION_BOTH_ARMS_SHOULDER_NOT_SHOULDER_ACTION("蝶泳双臂未经空中前摆",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳游进过程中出现仰卧姿势
@@ -340,7 +340,7 @@ public enum FoulEnum {
     BUTTERFLY_SWIM_IN_VIOLATION_SUPINE_POSITION("蝶泳游进过程中出现仰卧姿势",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳腿两腿动作不同时
@@ -349,7 +349,7 @@ public enum FoulEnum {
     BUTTERFLY_SWIM_IN_VIOLATION_LEGS_ACTION_DIFFERENT("蝶泳腿两腿动作不同时",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳腿两腿交替打水
@@ -358,7 +358,7 @@ public enum FoulEnum {
     BUTTERFLY_SWIM_IN_VIOLATION_LEGS_SWITCH_SWIM("蝶泳腿两腿交替打水",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳腿动作中出现蛙泳腿动作
@@ -367,7 +367,7 @@ public enum FoulEnum {
     BUTTERFLY_SWIM_IN_VIOLATION_LEGS_BUTTERFLY_ACTION("蝶泳腿动作中出现蛙泳腿动作",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳游进过程中，身体完全没入水中
@@ -376,7 +376,7 @@ public enum FoulEnum {
     BUTTERFLY_SWIM_IN_VIOLATION_BODY_TOTALLY_UNDER_WATER("蝶泳游进过程中完全潜入水中",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳出发或转身后在水下做超过一次划臂
@@ -385,7 +385,7 @@ public enum FoulEnum {
     BUTTERFLY_MORE_THAN_ONE_ARM_PULL_UNDERWATER("蝶泳出发或转身后在水下做超过一次划臂",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 混合泳游尽犯规 ==================== */
 
@@ -396,7 +396,7 @@ public enum FoulEnum {
     INDIVIDUAL_MEDLEY_SWIM_IN_VIOLATION_NOT_FOLLOW_ORDER("未按蝶泳、仰泳、蛙泳、自由泳顺序游进",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 混合泳的自由泳段采用蝶泳或仰泳或蛙泳技术
@@ -405,7 +405,7 @@ public enum FoulEnum {
     INDIVIDUAL_MEDLEY_SWIM_IN_VIOLATION_MIXED_TECHNIQUE("混合泳自由泳段采用蝶泳、仰泳或蛙泳技术",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 混合泳接力没有按照仰、蛙、蝶、自的顺序游进
@@ -414,7 +414,7 @@ public enum FoulEnum {
     MEDLEY_RELAY_SWIM_IN_VIOLATION_NOT_FOLLOW_ORDER("混合泳接力没有按照仰、蛙、蝶、自的顺序游进",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 混合泳蛙泳转自由泳段转身前未恢复俯卧姿势就做打腿或划水动作
@@ -423,7 +423,7 @@ public enum FoulEnum {
     MEDLEY_FREESTYLE_KICK_BEFORE_RETURN_PRONE("混合泳自由泳段转身前未恢复俯卧姿势就做打腿或划水动作",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 转身犯规 ==================== */
 
@@ -435,7 +435,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 自由泳转身后，头没有在15米内露出水面
@@ -445,7 +445,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳转身时，身体转为俯卧后做多次连续的单臂划水或双臂同时划水动作
@@ -455,7 +455,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳蹬离池壁后，呈俯卧姿势
@@ -465,7 +465,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳转身时，身体任意部位未接触池壁
@@ -475,7 +475,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳转身时，两手未同时触壁
@@ -485,7 +485,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳转身时，身体任意部分未接触池壁
@@ -495,7 +495,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳转身时，身体出现仰卧姿势
@@ -505,7 +505,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳转身后，第一次蛙泳蹬腿前，做超过一次的蝶泳腿
@@ -516,7 +516,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.STROKE_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蛙泳转身后，在第2次划臂两手划至最宽点开始向内划水前，头没有露出水面
@@ -527,7 +527,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.STROKE_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳转身时，单手转身
@@ -537,7 +537,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳转身时，仰卧姿势
@@ -547,7 +547,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳转身后，头没有在15米标志线之前露出水面
@@ -558,7 +558,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.STROKE_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳转身后，在水下划手超过一次
@@ -569,7 +569,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.STROKE_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳转身时，身体任意部分未触壁
@@ -579,7 +579,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 混合泳转身时，身体任意部分未触壁
@@ -589,7 +589,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 混合泳转身时，头没有在15米标志线之前露出水面（除了蛙泳）
@@ -600,7 +600,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.STROKE_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 混合泳在仰泳转蛙泳时，触壁前采用了俯卧姿势
@@ -610,7 +610,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳转仰泳和蛙泳转自由泳时，单手接触池壁
@@ -620,7 +620,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳转仰泳和蛙泳转自由泳时，采用了自由泳滚翻
@@ -630,7 +630,7 @@ public enum FoulEnum {
             OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 到边犯规 ==================== */
 
@@ -641,7 +641,7 @@ public enum FoulEnum {
     FINISH_NO_TOUCH("到达终点未触壁",
             AuthorityEnum.INSERT_ARRIVAL_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.UPDATE_ALL_ARRIVAL_FOUL.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 蝶泳、蛙泳以单手到边
@@ -650,7 +650,7 @@ public enum FoulEnum {
     FINISH_SINGLE_ARM_SWIM("蝶泳、蛙泳以单手到边",
             AuthorityEnum.INSERT_ARRIVAL_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.UPDATE_ALL_ARRIVAL_FOUL.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 仰泳到达终点线前，改变仰卧姿势
@@ -659,7 +659,7 @@ public enum FoulEnum {
     FINISH_SUPINE_POSITION("仰泳到达终点线前，改变仰卧姿势",
             AuthorityEnum.INSERT_ARRIVAL_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.UPDATE_ALL_ARRIVAL_FOUL.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 接力犯规 ==================== */
 
@@ -672,7 +672,7 @@ public enum FoulEnum {
                     | AuthorityEnum.INSERT_DEPARTURE_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.INSERT_ARRIVAL_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.UPDATE_ALL_DEPARTURE_FOUL.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 接力队员违规入水：非该棒运动员在比赛未结束时进入水中
@@ -683,7 +683,7 @@ public enum FoulEnum {
                     | AuthorityEnum.INSERT_DEPARTURE_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.INSERT_ARRIVAL_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.UPDATE_ALL_DEPARTURE_FOUL.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 接力顺序错误：未按报名顺序游接力棒次
@@ -694,7 +694,7 @@ public enum FoulEnum {
                     | AuthorityEnum.INSERT_DEPARTURE_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.INSERT_ARRIVAL_FOUL_ONLY_1_LANE.getPermissions()
                     | AuthorityEnum.UPDATE_ALL_DEPARTURE_FOUL.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 接力队未按报名名单顺序游进
@@ -702,7 +702,7 @@ public enum FoulEnum {
      */
     RELAY_NOT_IN_ORDER_LISTED("接力队未按报名名单顺序游进",
             OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 接力交接未从出发台开始
@@ -713,7 +713,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 接力队员在完成比赛前重新入水
@@ -724,7 +724,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DQ（取消资格）— 通用行为/装备犯规 ==================== */
 
@@ -735,7 +735,7 @@ public enum FoulEnum {
     LANE_DEVIATION("游出泳道",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 干扰其他运动员：阻碍、干扰其他运动员正常比赛
@@ -744,7 +744,7 @@ public enum FoulEnum {
     INTERFERENCE("干扰其他运动员",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 拉拽分道线：比赛中拉拽分道线
@@ -753,7 +753,7 @@ public enum FoulEnum {
     LANE_ROPE_PULLING("拉拽分道线",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 池底行走：在自由泳或混合泳自由泳段比赛中行走（站立允许）
@@ -762,7 +762,7 @@ public enum FoulEnum {
     WALKING_ON_BOTTOM("池底行走",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 在非自由泳比赛（或混合泳非自由泳段）站立于池底
@@ -771,7 +771,7 @@ public enum FoulEnum {
     STANDING_ON_BOTTOM("在非自由泳比赛中站立于池底",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 完成比赛后未尽快离开泳池
@@ -782,7 +782,7 @@ public enum FoulEnum {
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.TURN_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_TURN_INSPECTOR.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 使用配速设备或配速计划
@@ -790,7 +790,7 @@ public enum FoulEnum {
      */
     PACE_MAKING_DEVICE_OR_PLAN("使用配速设备或配速计划",
             OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 未报名运动员进入水中
@@ -798,7 +798,7 @@ public enum FoulEnum {
      */
     UNAUTHORIZED_ENTRY_DURING_RACE("未报名运动员在比赛进行中进入水中",
             OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 泳装违规：泳装不符合规定（如材质、覆盖范围等）
@@ -806,7 +806,7 @@ public enum FoulEnum {
      */
     ILLEGAL_SWIMWEAR("泳装违规",
             AuthorityEnum.UPDATE_ALL_LANE_ACHIEVEMENTS.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 佩戴违规设备：使用禁止的穿戴设备（如脚蹼、手蹼等）
@@ -814,14 +814,14 @@ public enum FoulEnum {
      */
     ILLEGAL_EQUIPMENT("佩戴违规设备",
             AuthorityEnum.UPDATE_ALL_LANE_ACHIEVEMENTS.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 广告违规：泳装或身体上的广告不符合规定
      */
     ADVERTISING_VIOLATION("广告违规",
             AuthorityEnum.UPDATE_ALL_LANE_ACHIEVEMENTS.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 延误比赛：故意延误出发或比赛进程
@@ -829,26 +829,26 @@ public enum FoulEnum {
      */
     DELAY_OF_GAME("延误比赛",
             AuthorityEnum.UPDATE_ALL_LANE_ACHIEVEMENTS.getPermissions(),
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 不服从裁判指令：故意不服从裁判员的合法指令
      * <p>2026规则 Article 4.4</p>
      */
     DISOBEDIENCE("不服从裁判指令", 0b0,
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 不当行为：比赛中的其他不当行为或违反体育道德行为
      */
     MISCONDUCT("不当行为", 0b0,
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /**
      * 其他犯规（导致取消资格）
      */
     OTHER_FOUL("其他犯规", 0b0,
-            RaceResultCodeEnum.DQ),
+            RaceResultCode.DQ),
 
     /* ==================== DNS（未出发） ==================== */
 
@@ -856,7 +856,7 @@ public enum FoulEnum {
      * 检录未到：检录时未按时到达
      */
     CALL_ROOM_ABSENCE("检录未到", 0b0,
-            RaceResultCodeEnum.DNS),
+            RaceResultCode.DNS),
 
     /**
      * 弃权
@@ -864,7 +864,7 @@ public enum FoulEnum {
     ABSTAIN("弃权",
             OfficialPositionEnum.CHIEF_REFEREE.getPermissions()
                     | OfficialPositionEnum.TIMER.getPermissions(),
-            RaceResultCodeEnum.DNS),
+            RaceResultCode.DNS),
 
     /* ==================== DNF（未完成） ==================== */
 
@@ -875,19 +875,19 @@ public enum FoulEnum {
     INCOMPLETE_DISTANCE("未完成全程",
             OfficialPositionEnum.STROKE_INSPECTOR.getPermissions()
                     | OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.DNF),
+            RaceResultCode.DNF),
 
     /* ==================== 无犯规且成绩有效 ==================== */
     OK("无犯规且成绩有效",
             OfficialPositionEnum.TIMER.getPermissions()
                     |OfficialPositionEnum.CHIEF_REFEREE.getPermissions(),
-            RaceResultCodeEnum.OK);
+            RaceResultCode.OK);
 
     private final String description;
     private final int permissions;
-    private final RaceResultCodeEnum resultCode;
+    private final RaceResultCode resultCode;
 
-    FoulEnum(String description, int permissions, RaceResultCodeEnum resultCode) {
+    FoulType(String description, int permissions, RaceResultCode resultCode) {
         this.description = description;
         this.permissions = permissions;
         this.resultCode = resultCode;
@@ -906,7 +906,7 @@ public enum FoulEnum {
      *
      * @return DQ / DNS / DNF / SCR 等结果代码枚举
      */
-    public RaceResultCodeEnum getResultCode() {
+    public RaceResultCode getResultCode() {
         return resultCode;
     }
 
@@ -914,21 +914,21 @@ public enum FoulEnum {
      * 判断该犯规是否属于取消资格（DQ）
      */
     public boolean isDisqualification() {
-        return resultCode == RaceResultCodeEnum.DQ || resultCode == RaceResultCodeEnum.DSQ;
+        return resultCode == RaceResultCode.DQ || resultCode == RaceResultCode.DSQ;
     }
 
     /**
      * 判断该犯规是否属于未出发（DNS）
      */
     public boolean isDidNotStart() {
-        return resultCode == RaceResultCodeEnum.DNS;
+        return resultCode == RaceResultCode.DNS;
     }
 
     /**
      * 判断该犯规是否属于未完成（DNF）
      */
     public boolean isDidNotFinish() {
-        return resultCode == RaceResultCodeEnum.DNF;
+        return resultCode == RaceResultCode.DNF;
     }
 
     /**
