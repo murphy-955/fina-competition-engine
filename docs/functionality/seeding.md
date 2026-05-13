@@ -41,14 +41,14 @@
 | `FinalsSeedingStrategy` | 决赛编排策略 |
 | `WorldAquaticsLaneAllocator` | 标准泳道分配器，按世界泳联规则分配道次 |
 | `LaneAllocator` | 泳道分配策略接口，允许用户自定义道次分配算法 |
-| `RaceKeyRegister<G>` | 项目 Key 生成器，用于将运动员按项目归类到 Map 中 |
+| `RaceKeyBuilder` | 项目 Key 生成器，用于将运动员按项目归类到 Map 中 |
 
 ---
 
 ## 3. 快速开始
 
 ```java
-import io.github.murphy955.fina.competition.service.RaceKeyRegister;
+import io.github.murphy955.fina.domain.service.RaceKeyBuilder;
 import io.github.murphy955.fina.competition.strategy.SeedingStrategy;
 import io.github.murphy955.fina.competition.strategy.impl.HeatsSeedingStrategy;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
@@ -65,15 +65,13 @@ enum AgeGroup implements BaseGroup {
 }
 
 // 2. 创建 Key 生成器
-RaceKeyRegister<AgeGroup> register = new RaceKeyRegister<>(AgeGroup.class);
-
 // 3. 生成项目 Key
-String key = register.buildKey(
-    GenderEnum.MALE.name(),      // 性别
-    AgeGroup.U18,                // 年龄组
-    "100",                       // 距离
-    EventTypeEnum.INDIVIDUAL.name(), // 项目类型
-    StrokeEnum.FREESTYLE.name()  // 泳姿
+String key = RaceKeyBuilder.buildKey(
+    Gender.MALE,           // 性别
+    AgeGroup.U18,          // 年龄组
+    "100",                 // 距离
+    EventType.INDIVIDUAL,  // 项目类型
+    Stroke.FREESTYLE       // 泳姿
 );
 // key = "MALE-U18-100-INDIVIDUAL-FREESTYLE"
 
@@ -233,27 +231,26 @@ enum TestAgeGroup implements BaseGroup {
 }
 
 // 初始化
-RaceKeyRegister<TestAgeGroup> register = new RaceKeyRegister<>(TestAgeGroup.class);
 Map<String, List<Athlete>> entries = new HashMap<>();
 
 // 项目1：男子U18 100米自由泳（16人，预期2组）
-String key1 = register.buildKey(
-    GenderEnum.MALE.name(), TestAgeGroup.U18, "100",
-    EventTypeEnum.INDIVIDUAL.name(), StrokeEnum.FREESTYLE.name()
+String key1 = RaceKeyBuilder.buildKey(
+    Gender.MALE, TestAgeGroup.U18, "100",
+    EventType.INDIVIDUAL, Stroke.FREESTYLE
 );
 entries.put(key1, createAthletes(key1, 16, 50.0));
 
 // 项目2：女子U18 100米蛙泳（5人，预期1组直接决赛）
-String key2 = register.buildKey(
-    GenderEnum.FEMALE.name(), TestAgeGroup.U18, "100",
-    EventTypeEnum.INDIVIDUAL.name(), StrokeEnum.BREASTSTROKE.name()
+String key2 = RaceKeyBuilder.buildKey(
+    Gender.FEMALE, TestAgeGroup.U18, "100",
+    EventType.INDIVIDUAL, Stroke.BREASTSTROKE
 );
 entries.put(key2, createAthletes(key2, 5, 70.0));
 
 // 项目3：男子成年组 400米自由泳（20人，长距离，预期3组，最后2组按2组规则）
-String key3 = register.buildKey(
-    GenderEnum.MALE.name(), TestAgeGroup.SENIOR, "400",
-    EventTypeEnum.INDIVIDUAL.name(), StrokeEnum.FREESTYLE.name()
+String key3 = RaceKeyBuilder.buildKey(
+    Gender.MALE, TestAgeGroup.SENIOR, "400",
+    EventType.INDIVIDUAL, Stroke.FREESTYLE
 );
 entries.put(key3, createAthletes(key3, 20, 240.0));
 

@@ -4,7 +4,7 @@ import io.github.murphy955.fina.domain.enm.EventType;
 import io.github.murphy955.fina.domain.enm.Gender;
 import io.github.murphy955.fina.domain.enm.Stroke;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
-import io.github.murphy955.fina.domain.service.RaceKeyRegister;
+import io.github.murphy955.fina.domain.service.RaceKeyBuilder;
 import io.github.murphy955.fina.domain.shared.BaseGroup;
 
 /**
@@ -31,7 +31,7 @@ public class Record<G extends Enum<G> & BaseGroup> {
 
     public Record(Gender gender, String raceTime, G group, String distance, EventType event, Stroke stroke) {
         this.raceTime = RaceTime.parse(raceTime);
-        this.key = new RaceKeyRegister<G>().buildKey(gender, group, distance, event, stroke);
+        this.key = RaceKeyBuilder.buildKey(gender, group, distance, event, stroke);
     }
 
 

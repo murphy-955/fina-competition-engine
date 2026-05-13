@@ -5,7 +5,7 @@ import io.github.murphy955.fina.domain.enm.Gender;
 import io.github.murphy955.fina.domain.enm.Stroke;
 import io.github.murphy955.fina.domain.entity.achievements.Result;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
-import io.github.murphy955.fina.domain.service.RaceKeyRegister;
+
 import io.github.murphy955.fina.domain.shared.BaseGroup;
 
 import java.io.Serial;
@@ -30,7 +30,7 @@ public class Project<G extends Enum<G> & BaseGroup> implements Serializable {
     public Project(Athlete athlete, Result result, Gender gender, G group, String distance, EventType event, Stroke stroke) {
         this.athlete = athlete;
         this.result = result;
-        this.key = new RaceKeyRegister<G>().buildKey(gender, group, distance, event, stroke);
+        this.key = io.github.murphy955.fina.domain.service.RaceKeyBuilder.buildKey(gender, group, distance, event, stroke);
     }
 
     public Project() {
