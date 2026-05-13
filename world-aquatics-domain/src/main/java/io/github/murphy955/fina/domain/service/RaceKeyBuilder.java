@@ -5,16 +5,13 @@ import io.github.murphy955.fina.domain.enm.EventType;
 import io.github.murphy955.fina.domain.enm.Gender;
 import io.github.murphy955.fina.domain.enm.Stroke;
 import io.github.murphy955.fina.domain.shared.BaseGroup;
+import io.github.murphy955.fina.domain.vo.RaceInfo;
 
 /**
  * 比赛项目 Key 生成器。
  * <p>
  * 用于将性别、组别、距离、项目类型、泳姿等维度编码为唯一字符串 key，
  * 便于在编排、成绩处理、纪录校验等场景中将运动员按项目归类。
- * </p>
- * <p>
- * Key 格式：{@code gender-group-distance-event-stroke}<br>
- * 示例：{@code MALE-U18-100-BREASTSTROKE-INDIVIDUAL} 表示男子 U18 组 100 米个人蛙泳。
  * </p>
  *
  * @author : 李泽聿
@@ -27,7 +24,19 @@ public class RaceKeyBuilder {
     }
 
     /**
-     * 生成比赛项目唯一 key。
+     * 根据 {@link RaceInfo} 生成项目唯一 key。
+     * <p>推荐方式，避免在调用处罗列五个参数。</p>
+     *
+     * @param info 比赛项目维度信息
+     * @return 格式为 {@code gender-group-distance-eventType-stroke} 的字符串
+     */
+    public static <G extends Enum<G> & BaseGroup> String buildKey(RaceInfo<G> info) {
+        return info.toKey();
+    }
+
+    /**
+     * 逐参生成项目唯一 key。
+     * <p>当你手头只有零散维度、不便组装成 {@link RaceInfo} 时使用。</p>
      *
      * @param gender   性别
      * @param group    用户自定义的分组（须实现 {@link BaseGroup}）

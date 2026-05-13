@@ -9,6 +9,7 @@ import io.github.murphy955.fina.domain.enm.Stroke;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 
+import io.github.murphy955.fina.domain.service.RaceKeyBuilder;
 import io.github.murphy955.fina.domain.shared.BaseGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
