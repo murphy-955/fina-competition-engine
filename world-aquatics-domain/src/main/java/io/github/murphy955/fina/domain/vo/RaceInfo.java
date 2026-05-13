@@ -62,4 +62,18 @@ public record RaceInfo<G extends Enum<G> & BaseGroup>(
     public String toString() {
         return toKey();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RaceInfo<?> raceInfo = (RaceInfo<?>) o;
+        return Objects.equals(group, raceInfo.group) && gender == raceInfo.gender && stroke == raceInfo.stroke && Objects.equals(distance, raceInfo.distance) && eventType == raceInfo.eventType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gender, group, distance, eventType, stroke);
+    }
 }

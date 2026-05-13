@@ -48,7 +48,7 @@
 ## 3. 快速开始
 
 ```java
-import io.github.murphy955.fina.domain.service.RaceKeyBuilder;
+import io.github.murphy955.fina.domain.util.RaceKeyUtil;
 import io.github.murphy955.fina.competition.strategy.SeedingStrategy;
 import io.github.murphy955.fina.competition.strategy.impl.HeatsSeedingStrategy;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
@@ -57,44 +57,63 @@ import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 import java.util.*;
 
 // 1. 定义分组枚举（需实现 BaseGroup）
+
 enum AgeGroup implements BaseGroup {
     U18("U18"), U20("U20"), SENIOR("SENIOR");
     private final String code;
-    AgeGroup(String code) { this.code = code; }
-    @Override public String getName() { return code; }
+
+    AgeGroup(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String getName() {
+        return code;
+    }
 }
 
-// 2. 创建 Key 生成器
+        // 2. 创建 Key 生成器
 // 3. 生成项目 Key
-String key = RaceKeyBuilder.buildKey(
-    Gender.MALE,           // 性别
-    AgeGroup.U18,          // 年龄组
-    "100",                 // 距离
-    EventType.INDIVIDUAL,  // 项目类型
-    Stroke.FREESTYLE       // 泳姿
-);
+        String key = RaceKeyBuilder.buildKey(
+                Gender.MALE,           // 性别
+                AgeGroup.U18,          // 年龄组
+                "100",                 // 距离
+                EventType.INDIVIDUAL,  // 项目类型
+                Stroke.FREESTYLE       // 泳姿
+        );
 // key = "MALE-U18-100-INDIVIDUAL-FREESTYLE"
 
-// 4. 准备运动员
-Map<String, List<Athlete>> entries = new HashMap<>();
-List<Athlete> athletes = Arrays.asList(
-    new Athlete("张三", RaceTime.parse("52.00")),
-    new Athlete("李四", RaceTime.parse("53.50")),
-    new Athlete("王五", RaceTime.parse("51.50")),
-    // ... 更多运动员
-);
-entries.put(key, athletes);
+        // 4. 准备运动员
+        Map<String, List<Athlete>> entries = new HashMap<>();
+        List<Athlete> athletes = Arrays.asList(
+                new Athlete("张三", RaceTime.parse("52.00")),
+                new Athlete("李四", RaceTime.parse("53.50")),
+                new Athlete("王五", RaceTime.parse("51.50")),
+                // ... 更多运动员
+        );
+entries.
 
-// 5. 执行编排
-SeedingStrategy strategy = new HeatsSeedingStrategy();
-strategy.generateSeeding(entries, 8); // 8 泳道池
+        put(key, athletes);
+
+        // 5. 执行编排
+        SeedingStrategy strategy = new HeatsSeedingStrategy();
+strategy.
+
+        generateSeeding(entries, 8); // 8 泳道池
 
 // 6. 读取结果
-for (Athlete athlete : athletes) {
-    System.out.println(athlete.getName()
-        + " -> 第" + athlete.getGroup() + "组"
-        + " 第" + athlete.getSwimLane() + "道");
-}
+for(
+        Athlete athlete :athletes){
+        System.out.
+
+        println(athlete.getName()
+        +" -> 第"+athlete.
+
+        getGroup() +"组"
+        +" 第"+athlete.
+
+        getSwimLane() +"道");
+        }
 ```
 
 ---

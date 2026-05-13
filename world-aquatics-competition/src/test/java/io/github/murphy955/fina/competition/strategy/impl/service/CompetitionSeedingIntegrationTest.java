@@ -9,7 +9,7 @@ import io.github.murphy955.fina.domain.enm.Stroke;
 import io.github.murphy955.fina.domain.entity.athlete.Athlete;
 import io.github.murphy955.fina.domain.entity.achievements.RaceTime;
 
-import io.github.murphy955.fina.domain.service.RaceKeyBuilder;
+import io.github.murphy955.fina.domain.util.RaceKeyUtil;
 import io.github.murphy955.fina.domain.shared.BaseGroup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 编排功能整体集成测试。
- * <p>验证从 {@link RaceKeyBuilder#buildKey} 生成 key，到将运动员分组存入 Map，
+ * <p>验证从 {@link RaceKeyUtil#buildKey} 生成 key，到将运动员分组存入 Map，
  * 最后交由 {@link SeedingStrategy} 完成预赛编排的完整流程。</p>
  *
  * @author 李泽聿
@@ -69,21 +69,21 @@ class CompetitionSeedingIntegrationTest {
 	@DisplayName("整体流程：多项目运动员报名→生成Key→分组编排")
 	void fullSeedingWorkflow() {
 		// ========== 1. 定义比赛项目 ==========
-		String men100FreeKey = io.github.murphy955.fina.domain.service.RaceKeyBuilder.buildKey(
+		String men100FreeKey = RaceKeyUtil.buildKey(
 				Gender.MALE,
 				TestAgeGroup.U18,
 				"100",
 				EventType.INDIVIDUAL,
 				Stroke.FREESTYLE
 		);
-		String women100BreastKey = io.github.murphy955.fina.domain.service.RaceKeyBuilder.buildKey(
+		String women100BreastKey = RaceKeyUtil.buildKey(
 				Gender.FEMALE,
 				TestAgeGroup.U18,
 				"100",
 				EventType.INDIVIDUAL,
 				Stroke.BREASTSTROKE
 		);
-		String men200FreeKey = io.github.murphy955.fina.domain.service.RaceKeyBuilder.buildKey(
+		String men200FreeKey = RaceKeyUtil.buildKey(
 				Gender.MALE,
 				TestAgeGroup.U18,
 				"200",
@@ -122,7 +122,7 @@ class CompetitionSeedingIntegrationTest {
 	@Test
 	@DisplayName("整体流程：长距离项目使用最后2组规则编排")
 	void longDistanceSeedingWorkflow() {
-		String men400FreeKey = io.github.murphy955.fina.domain.service.RaceKeyBuilder.buildKey(
+		String men400FreeKey = RaceKeyUtil.buildKey(
 				Gender.MALE,
 				TestAgeGroup.SENIOR,
 				"400",

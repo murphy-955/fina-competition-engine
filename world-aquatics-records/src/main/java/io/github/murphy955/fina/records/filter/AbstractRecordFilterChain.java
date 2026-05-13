@@ -38,6 +38,10 @@ public abstract class AbstractRecordFilterChain<G extends Enum<G> & BaseGroup> {
         return priority;
     }
 
+    public String getRecordLevel() {
+        return recordLevel;
+    }
+
     public Map<String,Record<G>> getRecordMap(){
         return recordMap;
     }
