@@ -23,8 +23,12 @@ public class Record<G extends Enum<G> & BaseGroup> {
     private final RaceTime raceTime;
 
     public Record(RaceInfo<G> raceInfo, String raceTime) {
+        this(raceInfo, RaceTime.parse(raceTime));
+    }
+
+    public Record(RaceInfo<G> raceInfo, RaceTime raceTime) {
         this.raceInfo = Objects.requireNonNull(raceInfo, "raceInfo must not be null");
-        this.raceTime = RaceTime.parse(raceTime);
+        this.raceTime = Objects.requireNonNull(raceTime, "raceTime must not be null");
     }
 
     public RaceInfo<G> getRaceInfo() {

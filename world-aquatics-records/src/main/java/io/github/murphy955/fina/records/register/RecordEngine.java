@@ -174,4 +174,52 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
         }
         return res;
     }
+
+    /**
+     * 更新责任链中的纪录线。<br>
+     * <strong>
+     *     注意： <br>
+     *     此方法不保证数据库、缓存一致性。仅更新当前进程内的记录。<br>
+     *     落库、更新缓存、一致性问题由调用者自行决断。
+     * </strong>
+     * <p>
+     * 当运动员成绩打破某级纪录后，调用此方法将对应 Filter 中的旧纪录替换为新成绩。
+     * 仅更新 {@code overRecordMap} 中 {@link OverRecordMap#isOverRecord()} 为 {@code true} 的条目。
+     * </p>
+     *
+     * @param overRecordMap 各级纪录比对结果，key 格式为 {@code recordLevel-projectKey}
+     */
+    public void changeFilterChain(Map<String, OverRecordMap<G>> overRecordMap) {
+        for (Map.Entry<String, OverRecordMap<G>> entry : overRecordMap.entrySet()) {
+            String mapKey = entry.getKey();
+            OverRecordMap<G> overRecord = entry.getValue();
+
+            if (!overRecord.isOverRecord()) {
+                continue;
+            }
+
+            // mapKey 格式: recordLevel-projectKey，projectKey 本身含多个 "-"
+            String[] parts = mapKey.split("-", 2);
+            if (parts.length != 2) {
+                continue;
+            }
+            String recordLevel = parts[0];
+            String key = parts[1];
+            RaceTime newRecordTime = overRecord.getNewRecordTime();
+
+            for (AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter : recordFilterChain) {
+                if (filter.getRecordLevel().equals(recordLevel) && filter.getRecordMap().containsKey(key)) {
+                    // 创建新 Record 替换旧纪录（Record 不可变，必须新建实例）
+                    Record<G> newRecord = new Record<>(
+                            RaceKeyUtil.decode(key, groupClass),
+                            newRecordTime
+                    );
+                    @SuppressWarnings("unchecked")
+                    Map<String, Record<G>> typedMap = (Map<String, Record<G>>) (Map<?, ?>) filter.getRecordMap();
+                    typedMap.put(key, newRecord);
+                    break; // 找到对应 filter 后无需继续遍历
+                }
+            }
+        }
+    }
 }
