@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 纪录引擎。
@@ -31,15 +32,21 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
 
     private final Class<G> groupClass;
     private final List<AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>>> recordFilterChain = new ArrayList<>();
+    private final ReentrantLock lock = new ReentrantLock();
 
     public RecordEngine(Class<G> groupClass) {
         this.groupClass = groupClass;
     }
 
     public void register(AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> recordFilterChain) {
-        this.recordFilterChain.add(recordFilterChain);
-        // priority 越大越靠近头部
-        this.recordFilterChain.sort((o1, o2) -> o2.getPriority() - o1.getPriority());
+        try {
+            lock.lock();
+            this.recordFilterChain.add(recordFilterChain);
+            // priority 越大越靠近头部
+            this.recordFilterChain.sort((o1, o2) -> o2.getPriority() - o1.getPriority());
+        } finally {
+            lock.unlock();
+        }
     }
 
     // ==================== evaluate 重载 ====================
