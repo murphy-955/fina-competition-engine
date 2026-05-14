@@ -98,6 +98,9 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
     protected boolean evaluate(RaceTime athleteTime, String key) {
         for (AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter : recordFilterChain) {
             RaceTime recordTime = readRecord(key, filter);
+            if (recordTime == null) {
+                continue; // 该项目在此 filter 中无纪录，跳过
+            }
             if (athleteTime.compareTo(recordTime) < 0) {
                 return true;
             }
@@ -113,7 +116,7 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
         } finally {
             lock.readLock().unlock();
         }
-        return record.getRaceTime();
+        return record == null ? null : record.getRaceTime();
     }
 
     // ==================== getOverRecordMap 重载 ====================
@@ -175,6 +178,9 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
             String recordLevel = filter.getRecordLevel();
 
             RaceTime recordTime = readRecord(key, filter);
+            if (recordTime == null) {
+                continue; // 该项目在此 filter 中无纪录，不生成比对结果
+            }
             // 结果 key 直接由 RaceInfo 现场组装，不再依赖预编码字符串的反向解析
             String mapKey = recordLevel + "-" + key;
 
