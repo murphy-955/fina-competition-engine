@@ -32,14 +32,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class RecordEngine<G extends Enum<G> & BaseGroup> {
 
     private final Class<G> groupClass;
-    private final List<AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>>> recordFilterChain = new ArrayList<>();
+    private final List<AbstractRecordFilterChain<G>> recordFilterChain = new ArrayList<>();
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public RecordEngine(Class<G> groupClass) {
         this.groupClass = groupClass;
     }
 
-    public void register(AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> recordFilterChain) {
+    public void register(AbstractRecordFilterChain<G> recordFilterChain) {
         try {
             lock.writeLock().lock();
             this.recordFilterChain.add(recordFilterChain);
@@ -96,7 +96,7 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
      * @return true 如果至少打破一级纪录
      */
     protected boolean evaluate(RaceTime athleteTime, String key) {
-        for (AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter : recordFilterChain) {
+        for (AbstractRecordFilterChain<G> filter : recordFilterChain) {
             RaceTime recordTime = readRecord(key, filter);
             if (recordTime == null) {
                 continue; // 该项目在此 filter 中无纪录，跳过
@@ -108,8 +108,8 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
         return false;
     }
 
-    private RaceTime readRecord(String key, AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter) {
-        Record<? extends Enum<? extends BaseGroup>> record;
+    private RaceTime readRecord(String key, AbstractRecordFilterChain<G> filter) {
+        Record<G> record;
         try {
             lock.readLock().lock();
             record = filter.getRecordMap().get(key);
@@ -174,7 +174,7 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
         // 循环外仅做一次 buildKey，避免重复编码
         String key = RaceKeyUtil.buildKey(raceInfo);
 
-        for (AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter : recordFilterChain) {
+        for (AbstractRecordFilterChain<G> filter : recordFilterChain) {
             String recordLevel = filter.getRecordLevel();
 
             RaceTime recordTime = readRecord(key, filter);
@@ -222,18 +222,16 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
             String key = parts[1];
             RaceTime newRecordTime = overRecord.getNewRecordTime();
 
-            for (AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter : recordFilterChain) {
+            for (AbstractRecordFilterChain<G> filter : recordFilterChain) {
                 if (filter.getRecordLevel().equals(recordLevel) && filter.getRecordMap().containsKey(key)) {
                     // 创建新 Record 替换旧纪录（Record 不可变，必须新建实例）
                     Record<G> newRecord = new Record<>(
                             RaceKeyUtil.decode(key, groupClass),
                             newRecordTime
                     );
-                    @SuppressWarnings("unchecked")
-                    Map<String, Record<G>> typedMap = (Map<String, Record<G>>) (Map<?, ?>) filter.getRecordMap();
                     try {
                         lock.writeLock().lock();
-                        typedMap.put(key, newRecord);
+                        filter.getRecordMap().put(key, newRecord);
                     } finally {
                         lock.writeLock().unlock();
                     }
