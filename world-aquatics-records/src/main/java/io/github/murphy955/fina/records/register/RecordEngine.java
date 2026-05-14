@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 纪录引擎。
@@ -32,7 +35,7 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
 
     private final Class<G> groupClass;
     private final List<AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>>> recordFilterChain = new ArrayList<>();
-    private final ReentrantLock lock = new ReentrantLock();
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public RecordEngine(Class<G> groupClass) {
         this.groupClass = groupClass;
@@ -40,12 +43,12 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
 
     public void register(AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> recordFilterChain) {
         try {
-            lock.lock();
+            lock.writeLock().lock();
             this.recordFilterChain.add(recordFilterChain);
             // priority 越大越靠近头部
             this.recordFilterChain.sort((o1, o2) -> o2.getPriority() - o1.getPriority());
         } finally {
-            lock.unlock();
+            lock.writeLock().unlock();
         }
     }
 
@@ -223,7 +226,12 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
                     );
                     @SuppressWarnings("unchecked")
                     Map<String, Record<G>> typedMap = (Map<String, Record<G>>) (Map<?, ?>) filter.getRecordMap();
-                    typedMap.put(key, newRecord);
+                    try {
+                        lock.writeLock().lock();
+                        typedMap.put(key, newRecord);
+                    } finally {
+                        lock.writeLock().unlock();
+                    }
                     break; // 找到对应 filter 后无需继续遍历
                 }
             }
