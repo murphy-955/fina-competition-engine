@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -99,17 +97,23 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
      */
     protected boolean evaluate(RaceTime athleteTime, String key) {
         for (AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter : recordFilterChain) {
-            // TODO: (李泽聿 ,2026-05-12 17:33 ,[2026-05-17]) 责任链 filter 业务待实现
-            Record<? extends Enum<? extends BaseGroup>> record = filter.getRecordMap().get(key);
-            if (record == null) {
-                continue;
-            }
-            RaceTime recordTime = record.getRaceTime();
+            RaceTime recordTime = readRecord(key, filter);
             if (athleteTime.compareTo(recordTime) < 0) {
                 return true;
             }
         }
         return false;
+    }
+
+    private RaceTime readRecord(String key, AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter) {
+        Record<? extends Enum<? extends BaseGroup>> record;
+        try {
+            lock.readLock().lock();
+            record = filter.getRecordMap().get(key);
+        } finally {
+            lock.readLock().unlock();
+        }
+        return record.getRaceTime();
     }
 
     // ==================== getOverRecordMap 重载 ====================
@@ -170,12 +174,7 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
         for (AbstractRecordFilterChain<? extends Enum<? extends BaseGroup>> filter : recordFilterChain) {
             String recordLevel = filter.getRecordLevel();
 
-            Record<? extends Enum<? extends BaseGroup>> record = filter.getRecordMap().get(key);
-            if (record == null) {
-                continue;
-            }
-
-            RaceTime recordTime = record.getRaceTime();
+            RaceTime recordTime = readRecord(key, filter);
             // 结果 key 直接由 RaceInfo 现场组装，不再依赖预编码字符串的反向解析
             String mapKey = recordLevel + "-" + key;
 
