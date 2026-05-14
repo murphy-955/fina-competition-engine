@@ -50,7 +50,7 @@ class RecordEngineTest {
 
     @BeforeEach
     void setUp() {
-        engine = new RecordEngine<>(TestAgeGroup.class);
+        engine = new RecordEngine<>();
         raceInfo = new RaceInfo<>(
                 Gender.MALE,
                 TestAgeGroup.U18,

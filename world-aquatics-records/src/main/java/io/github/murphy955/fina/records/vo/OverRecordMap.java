@@ -44,4 +44,8 @@ public class OverRecordMap<G extends Enum<G> & BaseGroup> {
     public String getRecordLevel() {
         return recordLevel;
     }
+
+    public RaceInfo<G> getRaceInfo() {
+        return raceInfo;
+    }
 }

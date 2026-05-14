@@ -31,12 +31,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class RecordEngine<G extends Enum<G> & BaseGroup> {
 
-    private final Class<G> groupClass;
     private final List<AbstractRecordFilterChain<G>> recordFilterChain = new ArrayList<>();
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public RecordEngine(Class<G> groupClass) {
-        this.groupClass = groupClass;
+    public RecordEngine() {
     }
 
     public void register(AbstractRecordFilterChain<G> recordFilterChain) {
@@ -226,7 +224,7 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
                 if (filter.getRecordLevel().equals(recordLevel) && filter.getRecordMap().containsKey(key)) {
                     // 创建新 Record 替换旧纪录（Record 不可变，必须新建实例）
                     Record<G> newRecord = new Record<>(
-                            RaceKeyUtil.decode(key, groupClass),
+                            overRecord.getRaceInfo(),
                             newRecordTime
                     );
                     try {
