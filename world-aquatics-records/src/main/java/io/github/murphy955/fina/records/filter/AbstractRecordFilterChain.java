@@ -8,7 +8,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 记录处理抽象责任链
+ * 记录处理抽象责任链。
+ *
+ * <p>TODO: 引入 {@code BreakPolicy} 枚举，让用户自定义“该级别破纪录后是否阻断后续遍历”。
+ * <ul>
+ *   <li>{@code BREAK_ON_RECORD} — 该 filter 判定破纪录后，停止检查更低优先级的 filter。</li>
+ *   <li>{@code CONTINUE} — 该 filter 判定破纪录后，继续检查更低优先级的 filter（默认行为）。</li>
+ * </ul>
+ * 进阶：如需按时间差等条件动态决策，可再叠加 {@code EvaluationInterceptor} 策略接口。
  *
  * @author : 李泽聿
  * @since : 2026:05:12 14:48

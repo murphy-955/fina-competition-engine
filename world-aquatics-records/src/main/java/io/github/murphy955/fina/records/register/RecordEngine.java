@@ -89,6 +89,18 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
     /**
      * 核心评估逻辑。
      *
+     * <p>TODO: 支持 Filter 级 {@code BreakPolicy} 与 {@code EvaluationInterceptor} 自定义策略。
+     * 当前为硬编码短路：一旦某个 filter 判定破纪录即 {@code return true}。
+     * 后续应改为：
+     * <pre>
+     * for (filter : recordFilterChain) {
+     *     if (破了该级 && filter.getBreakPolicy() == BREAK_ON_RECORD) return true;
+     *     if (破了该级 && filter.getBreakPolicy() == CONTINUE)        continue;
+     *     // 进阶：injector.shouldContinue(filter, athleteTime, recordTime)
+     * }
+     * </pre>
+     * 注意：{@code getOverRecordMap} 应保持独立，始终返回全部比对结果，不受 BreakPolicy 影响。
+     *
      * @param athleteTime 运动员成绩
      * @param key         项目唯一 key
      * @return true 如果至少打破一级纪录
