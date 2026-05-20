@@ -12,10 +12,7 @@ import io.github.murphy955.fina.domain.vo.RaceInfo;
 import io.github.murphy955.fina.records.filter.AbstractRecordFilterChain;
 import io.github.murphy955.fina.records.vo.OverRecordMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -54,10 +51,11 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
      * 评估给定项目成绩是否打破已注册纪录。
      *
      * @param project 比赛单项（含运动员、成绩、项目维度）
+     * @param filter  指定参与评估的纪录过滤器链；为 {@code null} 时使用已注册的全局责任链
      * @return true 如果至少打破一级纪录
      */
-    public boolean evaluate(Project<G> project) {
-        return evaluate(project.getResult().getTotalTime(), project.getKey());
+    public boolean evaluate(Project<G> project, List<AbstractRecordFilterChain<G>> filter) {
+        return evaluate(project.getResult().getTotalTime(), project.getKey(), filter);
     }
 
     /**
@@ -69,10 +67,17 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
      * @param distance    项目长度
      * @param event       项目类型（个人/团体）
      * @param stroke      泳姿
+     * @param filter      指定参与评估的纪录过滤器链；为 {@code null} 时使用已注册的全局责任链
      * @return true 如果至少打破一级纪录
      */
-    public boolean evaluate(RaceTime athleteTime, Gender gender, G group, String distance, EventType event, Stroke stroke) {
-        return evaluate(athleteTime, RaceKeyUtil.buildKey(gender, group, distance, event, stroke));
+    public boolean evaluate(RaceTime athleteTime,
+                            Gender gender,
+                            G group,
+                            String distance,
+                            EventType event,
+                            Stroke stroke,
+                            List<AbstractRecordFilterChain<G>> filter) {
+        return evaluate(athleteTime, RaceKeyUtil.buildKey(gender, group, distance, event, stroke),filter);
     }
 
     /**
@@ -80,10 +85,11 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
      *
      * @param athleteTime 运动员成绩
      * @param raceInfo    项目维度信息
+     * @param filter      指定参与评估的纪录过滤器链；为 {@code null} 时使用已注册的全局责任链
      * @return true 如果至少打破一级纪录
      */
-    public boolean evaluate(RaceTime athleteTime, RaceInfo<G> raceInfo) {
-        return evaluate(athleteTime, RaceKeyUtil.buildKey(raceInfo));
+    public boolean evaluate(RaceTime athleteTime, RaceInfo<G> raceInfo, List<AbstractRecordFilterChain<G>> filter) {
+        return evaluate(athleteTime, RaceKeyUtil.buildKey(raceInfo), filter);
     }
 
     /**
@@ -103,11 +109,14 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
      *
      * @param athleteTime 运动员成绩
      * @param key         项目唯一 key
+     * @param filter      指定参与评估的纪录过滤器链；为 {@code null} 时使用已注册的全局责任链
      * @return true 如果至少打破一级纪录
      */
-    protected boolean evaluate(RaceTime athleteTime, String key) {
-        for (AbstractRecordFilterChain<G> filter : recordFilterChain) {
-            RaceTime recordTime = readRecord(key, filter);
+    protected boolean evaluate(RaceTime athleteTime, String key, List<AbstractRecordFilterChain<G>> filter) {
+        List<AbstractRecordFilterChain<G>> innerFilter;
+        innerFilter = Objects.requireNonNullElse(filter, this.recordFilterChain);
+        for (AbstractRecordFilterChain<G> filterChain : innerFilter) {
+            RaceTime recordTime = readRecord(key, filterChain);
             if (recordTime == null) {
                 continue; // 该项目在此 filter 中无纪录，跳过
             }
@@ -203,9 +212,9 @@ public class RecordEngine<G extends Enum<G> & BaseGroup> {
     /**
      * 更新责任链中的纪录线。<br>
      * <strong>
-     *     注意： <br>
-     *     此方法不保证数据库、缓存一致性。仅更新当前进程内的记录。<br>
-     *     落库、更新缓存、一致性问题由调用者自行决断。
+     * 注意： <br>
+     * 此方法不保证数据库、缓存一致性。仅更新当前进程内的记录。<br>
+     * 落库、更新缓存、一致性问题由调用者自行决断。
      * </strong>
      * <p>
      * 当运动员成绩打破某级纪录后，调用此方法将对应 Filter 中的旧纪录替换为新成绩。

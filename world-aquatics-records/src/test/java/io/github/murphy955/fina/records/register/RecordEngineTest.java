@@ -88,7 +88,7 @@ class RecordEngineTest {
 
         RaceTime time = RaceTime.parse("53.00");
         // priority 高的先被评估：HIGH(54.00) < 53.00? 否，继续 LOW(55.00) < 53.00? 是 → true
-        assertTrue(engine.evaluate(time, raceInfo));
+        assertTrue(engine.evaluate(time, raceInfo, null));
     }
 
     // ==================== evaluate ====================
@@ -100,7 +100,7 @@ class RecordEngineTest {
         engine.register(createFilter(1, "NATIONAL", "53.00"));
 
         RaceTime athleteTime = RaceTime.parse("51.00");
-        assertTrue(engine.evaluate(athleteTime, raceInfo));
+        assertTrue(engine.evaluate(athleteTime, raceInfo, null));
     }
 
     @Test
@@ -110,7 +110,7 @@ class RecordEngineTest {
         engine.register(createFilter(1, "NATIONAL", "53.00"));
 
         RaceTime athleteTime = RaceTime.parse("54.00");
-        assertFalse(engine.evaluate(athleteTime, raceInfo));
+        assertFalse(engine.evaluate(athleteTime, raceInfo, null));
     }
 
     @Test
@@ -121,7 +121,7 @@ class RecordEngineTest {
 
         // 53.00 破全国纪录(54.00) 但未破世界纪录(52.00)
         RaceTime athleteTime = RaceTime.parse("53.00");
-        assertTrue(engine.evaluate(athleteTime, raceInfo));
+        assertTrue(engine.evaluate(athleteTime, raceInfo, null));
     }
 
     @Test
@@ -134,7 +134,7 @@ class RecordEngineTest {
                 EventType.INDIVIDUAL, Stroke.BREASTSTROKE
         );
         RaceTime athleteTime = RaceTime.parse("51.00");
-        assertFalse(engine.evaluate(athleteTime, otherRace));
+        assertFalse(engine.evaluate(athleteTime, otherRace, null));
     }
 
     @Test
@@ -146,7 +146,41 @@ class RecordEngineTest {
         project.setResult(new io.github.murphy955.fina.domain.entity.achievements.Result(RaceTime.parse("51.00")));
         project.setRaceInfo(raceInfo);
 
-        assertTrue(engine.evaluate(project));
+        assertTrue(engine.evaluate(project, null));
+    }
+
+    @Test
+    @DisplayName("传入自定义 filter → 仅评估指定过滤器")
+    void evaluateWithCustomFilterOnly() {
+        AbstractRecordFilterChain<TestAgeGroup> worldFilter = createFilter(10, "WORLD", "52.00");
+        AbstractRecordFilterChain<TestAgeGroup> nationalFilter = createFilter(1, "NATIONAL", "54.00");
+        engine.register(worldFilter);
+        engine.register(nationalFilter);
+
+        RaceTime athleteTime = RaceTime.parse("53.00");
+
+        // 只传入 NATIONAL filter：53.00 < 54.00 → true
+        assertTrue(engine.evaluate(athleteTime, raceInfo, List.of(nationalFilter)));
+
+        // 只传入 WORLD filter：53.00 > 52.00 → false
+        assertFalse(engine.evaluate(athleteTime, raceInfo, List.of(worldFilter)));
+    }
+
+    @Test
+    @DisplayName("传入空 filter 列表 → 未打破")
+    void evaluateWithEmptyFilter() {
+        engine.register(createFilter(1, "WORLD", "52.00"));
+        RaceTime athleteTime = RaceTime.parse("51.00");
+        assertFalse(engine.evaluate(athleteTime, raceInfo, List.of()));
+    }
+
+    @Test
+    @DisplayName("传入 null filter → 回退到全局责任链")
+    void evaluateWithNullFilterFallback() {
+        engine.register(createFilter(1, "WORLD", "52.00"));
+        RaceTime athleteTime = RaceTime.parse("51.00");
+        // null 应等效于使用已注册的全局责任链
+        assertTrue(engine.evaluate(athleteTime, raceInfo, null));
     }
 
     // ==================== getOverRecordMap ====================
@@ -204,14 +238,14 @@ class RecordEngineTest {
 
         RaceTime athleteTime = RaceTime.parse("51.00");
         // 先确认打破纪录
-        assertTrue(engine.evaluate(athleteTime, raceInfo));
+        assertTrue(engine.evaluate(athleteTime, raceInfo, null));
 
         // 获取比对结果并更新
         Map<String, OverRecordMap<TestAgeGroup>> overMap = engine.getOverRecordMap(athleteTime, raceInfo);
         engine.changeFilterChain(overMap);
 
         // 更新后再用同样的成绩评估，应不再打破
-        assertFalse(engine.evaluate(athleteTime, raceInfo));
+        assertFalse(engine.evaluate(athleteTime, raceInfo, null));
 
         // 验证 filter 内部的 record 已被更新
         Record<?> updatedRecord = worldFilter.getRecordMap().get(raceInfo.toKey());
@@ -245,7 +279,7 @@ class RecordEngineTest {
         // 更直接的验证：用 51.00 去破 WORLD，如果 WORLD 已被更新为 53.00，则 51.00 仍然破
         // 但 WORLD 实际是 52.00，所以下面验证的是 NATIONAL 被更新、WORLD 未被更新
         // 由于 engine 内部持有的是同一个 filter 引用，我们可以直接获取
-        assertTrue(engine.evaluate(RaceTime.parse("51.50"), raceInfo),
+        assertTrue(engine.evaluate(RaceTime.parse("51.50"), raceInfo, null),
                 "WORLD 纪录应仍为 52.00，51.50 应该能破");
     }
 }
